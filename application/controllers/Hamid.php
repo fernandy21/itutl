@@ -30,10 +30,10 @@ class Hamid extends CI_Controller{
     }
 
     public function printLembur(){
-        $titleTag = 'Dashboard';
+        // $titleTag = 'Dashboard';
         // $content = 'user/printlembur';
         // $ip = $this->ip->getIpList();
-        $lembur = $this->lembur->getLemburId();
+        // $lembur = $this->lembur->getLemburId();
 
         // echo '<pre>';
         // var_dump($lembur);
@@ -41,7 +41,8 @@ class Hamid extends CI_Controller{
         // die($lembur);
         // print_r($lembur);die();
 
-        $this->load->view('user/printlembur',compact('lembur'));
+// $this->load->view('user/printlembur',compact('content','lemburid'));
+        $this->load->view('user/printlembur');
     }
     
     public function createIp(){

@@ -16,7 +16,7 @@ class Lembur_model extends CI_Model{
             'durasi'=>''
         ];
     }
-    
+
     public function getLemburList(){
         $this->db->select('*');
         $this->db->from($this->table.' as a');
@@ -27,7 +27,13 @@ class Lembur_model extends CI_Model{
     public function getLemburId($id) {
         // Fetch data by ID from the database
         // return $this->db->where('id',$id)->get($this->table)->row();
-        return $this->db->get_where($this->table, array('id' => $id))->row(); // Return single row
+        $query = $this->db->select('*')
+                        ->from('lembur_it')
+                        ->join('user_it', 'lembur_it.username = user_it.username')
+                        ->where('lembur_it.id', $id)
+                        ->get();
+        return $result = $query->row();
+
     }
 
     // public function insertIp($data){
