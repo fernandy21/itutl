@@ -19,102 +19,122 @@
   						<div class="row">
   							<!-- TAB KIRI -->
   							<div class="col-md-2">
+
+								<div class="card mt-3">
+
+									<div class="card-body pt-2">
+										<span class="text-gradient text-primary text-uppercase text-xs font-weight-bold my-2">IT Utilities</span>
+										<a href="javascript:;" class="card-title h5 d-block text-darker">
+  											Operasional Unit IT
+										</a>
+										
+										<button class="btn btn-icon mb-3 btn-3 btn-primary btn-sm" id="btn-ip" type="button">
+											<span class="btn-inner--icon"><i class="ni ni-button-play"></i></span>
+											<span class="btn-inner--text"> IP List</span>
+										</button>
+										<button class="btn btn-icon mb-3 btn-3 btn-primary btn-sm" id="btn-lembur" type="button">
+											<span class="btn-inner--icon"><i class="ni ni-button-play"></i></span>
+											<span class="btn-inner--text"> Data Lembur</span>
+										</button>
+
+									</div>
+								</div>
+
 							</div>
 							<!-- TAB TENGAH -->
   							<div class="col-md-10">
   								<!-- Tabel IP -->
-  								<h2 class="mt-3">IP LIST
-  									<button type="button" class="btn btn-primary btn-sm" data-toggle="modal" data-target="#tambahipModal">Tambah IP</button>
-  								</h2>
-  								<div class="col-xl">
-  									<div class="row">
-  										<div class="col-md-6">
-  											<!-- Search Bar -->
-  											<input type="text" id="searchIp" class="form-control mb-3" placeholder="Search...">
-  										</div>
-  									</div>
-  									<div class="row" style="height: 300px; overflow: scroll;">
-  										<div class="col-xl">
-  											<table id="dataTable-IP" class="table">
-  												<thead style="position: -webkit-sticky; position: sticky; top: 0; padding: 5px; background-color: #cadbe8; z-index: 1;">
-  													<tr>
-  														<th>NO</th>
-  														<th>IP ADDRESS</th>
-  														<th>NAME</th>
-  														<th>AKSI</th>
-  													</tr>
-  												</thead>
-  												<tbody>
-  													<?php $i = 1; ?>
-  													<?php foreach ($ip as $row) : ?>
-  														<tr>
-  															<td><?php echo $i++; ?></td>
-  															<td><?php echo $row->ipaddr; ?></td>
-  															<td><?php echo $row->name; ?></td>
-  															<td>
-  																<button type="button" class="btn btn-success btn-sm" data-toggle="modal" data-target="#editModal<?php echo $row->id; ?>">EDIT</button>
-  																<button type="button" class="btn btn-danger btn-sm" onclick="confirmDelete(<?php echo $row->id; ?>)">DELETE</button>
-  															</td>
-  														</tr>
-  													<?php endforeach ?>
-  												</tbody>
-  											</table>
-  										</div>
-  									</div>
-  								</div>
+								<div id="tabel_ip" >
+									<h2 class="mt-3">IP LIST
+										<button type="button" class="btn btn-primary btn-sm" data-toggle="modal" data-target="#tambahipModal">Tambah IP</button>
+									</h2>
+									<div class="col-xl">
+										<div class="row">
+											<div class="col-md-6">
+												<!-- Search Bar -->
+												<input type="text" id="searchIp" class="form-control mb-3" placeholder="Search...">
+											</div>
+										</div>
+										<div class="row" style="height: 300px; overflow: scroll;">
+											<div class="col-xl">
+												<table id="dataTable-IP" class="table">
+													<thead style="position: -webkit-sticky; position: sticky; top: 0; padding: 5px; background-color: #cadbe8; z-index: 1;">
+														<tr>
+															<th>NO</th>
+															<th>IP ADDRESS</th>
+															<th>NAME</th>
+															<th>AKSI</th>
+														</tr>
+													</thead>
+													<tbody>
+														<?php $i = 1; ?>
+														<?php foreach ($ip as $row) : ?>
+															<tr>
+																<td><?php echo $i++; ?></td>
+																<td><?php echo $row->ipaddr; ?></td>
+																<td><?php echo $row->name; ?></td>
+																<td>
+																	<button type="button" class="btn btn-success btn-sm" data-toggle="modal" data-target="#editModal<?php echo $row->id; ?>">EDIT</button>
+																	<button type="button" class="btn btn-danger btn-sm" onclick="confirmDelete(<?php echo $row->id; ?>)">DELETE</button>
+																</td>
+															</tr>
+														<?php endforeach ?>
+													</tbody>
+												</table>
+											</div>
+										</div>
+									</div>
+								</div>
+								<div id="tabel_data_lembur" hidden>
+									<!-- Tabel IP -->
+									<h2 class="mt-3">LEMBUR LIST
+											<!-- <button type="button" class="btn btn-primary btn-sm" data-toggle="modal" data-target="#tambahipModal">Tambah IP</button> -->
+										</h2>
+										<div class="col-xl">
+											<div class="row">
+												<div class="col-md-6">
+													<!-- Search Bar -->
+													<input type="text" id="searchLembur" class="form-control mb-3" placeholder="Search...">
+												</div>
+											</div>
+											<div class="row" style="height: 300px; overflow: scroll;">
+												<div class="col-xl">
+													<table id="dataTable-Lembur" class="table">
+														<thead style="position: -webkit-sticky; position: sticky; top: 0; padding: 5px; background-color: #cadbe8; z-index: 1;">
+															<tr>
+																<th>NO</th>
+																<th>ID</th>
+																<th>NAMA</th>
+																<th>TANGGAL/JAM</th>
+																<th>GAWIAN</th>
+																<th>AKSI</th>
+															</tr>
+														</thead>
+														<tbody>
+															<?php $i = 1; ?>
+															<?php foreach ($lembur as $row) : ?>
+																<tr>
+																	<td><?php echo $i++; ?></td>
+																	<td><?php echo $row->id; ?></td>
+																	<td><?php echo $row->Nama; ?></td>
+																	<td><?php echo $row->tanggal; ?>, <?php echo $row->durasi; ?></td>
+																	<td><?php echo $row->sub_judul; ?></td>
+																	<td>
+																	<a type="button" href="printlembur?id=<?php echo $row->id; ?>" target="_blank" class="btn btn-success btn-sm">PRINT</a>
+																		<!-- <button type="button" class="btn btn-success btn-sm" data-toggle="modal" data-target="#editModal<?php echo $row->id; ?>">PRINT</button> -->
+																		<!-- <button type="button" class="btn btn-success btn-sm" data-toggle="modal" data-target="#editModal<?php echo $row->id; ?>">EDIT</button>
+																		<button type="button" class="btn btn-danger btn-sm" onclick="confirmDelete(<?php echo $row->id; ?>)">DELETE</button> -->
+																	</td>
+																</tr>
+															<?php endforeach ?>
+														</tbody>
+													</table>
+												</div>
+											</div>
+										</div>
+								</div>  								
   							</div>
-  							<!-- TAB KIRI -->
-  							<div class="col-md-2">
-							</div>
-							<!-- TAB TENGAH -->
-  							<div class="col-md-10">
-  								<!-- Tabel IP -->
-  								<h2 class="mt-3">LEMBUR LIST
-  									<!-- <button type="button" class="btn btn-primary btn-sm" data-toggle="modal" data-target="#tambahipModal">Tambah IP</button> -->
-  								</h2>
-  								<div class="col-xl">
-  									<div class="row">
-  										<div class="col-md-6">
-  											<!-- Search Bar -->
-  											<input type="text" id="searchLembur" class="form-control mb-3" placeholder="Search...">
-  										</div>
-  									</div>
-  									<div class="row" style="height: 300px; overflow: scroll;">
-  										<div class="col-xl">
-  											<table id="dataTable-Lembur" class="table">
-  												<thead style="position: -webkit-sticky; position: sticky; top: 0; padding: 5px; background-color: #cadbe8; z-index: 1;">
-  													<tr>
-  														<th>NO</th>
-  														<th>ID</th>
-  														<th>USERNAME</th>
-  														<th>TANGGAL/JAM</th>
-  														<th>GAWIAN</th>
-  														<th>AKSI</th>
-  													</tr>
-  												</thead>
-  												<tbody>
-  													<?php $i = 1; ?>
-  													<?php foreach ($lembur as $row) : ?>
-  														<tr>
-  															<td><?php echo $i++; ?></td>
-  															<td><?php echo $row->id; ?></td>
-  															<td><?php echo $row->username; ?></td>
-  															<td><?php echo $row->tanggal; ?>, <?php echo $row->durasi; ?></td>
-  															<td><?php echo $row->sub_judul; ?></td>
-  															<td>
-															  <a type="button" href="printlembur?id=<?php echo $row->id; ?>" target="_blank" class="btn btn-success btn-sm">PRINT</a>
-  																<!-- <button type="button" class="btn btn-success btn-sm" data-toggle="modal" data-target="#editModal<?php echo $row->id; ?>">PRINT</button> -->
-  																<!-- <button type="button" class="btn btn-success btn-sm" data-toggle="modal" data-target="#editModal<?php echo $row->id; ?>">EDIT</button>
-  																<button type="button" class="btn btn-danger btn-sm" onclick="confirmDelete(<?php echo $row->id; ?>)">DELETE</button> -->
-  															</td>
-  														</tr>
-  													<?php endforeach ?>
-  												</tbody>
-  											</table>
-  										</div>
-  									</div>
-  								</div>
-  							</div>
+
   						</div>
   					</div>
 
@@ -199,6 +219,21 @@
   								window.location.href = "<?php echo base_url('hamid/deleteIp/'); ?>" + id;
   							}
   						}
+
+						$('#btn-ip').click(function () {
+							if ($("#tabel_ip").is(':hidden')) {
+								$("#tabel_ip").prop('hidden', false);
+							} else {
+								$("#tabel_ip").prop('hidden', true);
+							}
+						})
+						$('#btn-lembur').click(function () {
+							if ($("#tabel_data_lembur").is(':hidden')) {
+								$("#tabel_data_lembur").prop('hidden', false);
+							} else {
+								$("#tabel_data_lembur").prop('hidden', true);
+							}
+						})
   					</script>
 					<script>
 					// 	function printData(id) {

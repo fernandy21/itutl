@@ -26,18 +26,12 @@ $id = $_GET['id'];
                 <thead>
                     <tr>
                         <th>ID</th>
-                        <th>Username</th>
+                        <th>Nama</th>
                         <th>Tanggal/Jam</th>
                         <th>Gawian</th>
                     </tr>
                 </thead>
                 <tbody>
-                    <tr>
-                        <td>aaaaa</td>
-                        <td>aaaaa</td>
-                        <td>aaaaa>, aaaaa</td>
-                        <td>aaaaa</td>
-                    </tr>
                 </tbody>
             </table>
         </div>

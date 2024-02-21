@@ -18,12 +18,10 @@ class Lembur_model extends CI_Model{
     }
     
     public function getLemburList(){
-        return $this->db->select('id, username, tanggal, sub_judul, perihal, perihal, durasi')
-                    ->from($this->table)
-                    // ->order_by('ipaddr','DESC')
-                    // ->limit('1')
-                    ->get()
-                    ->result();
+        $this->db->select('*');
+        $this->db->from($this->table.' as a');
+        $this->db->join('user_it as b', 'a.username = b.username');
+        return $query = $this->db->get()->result();            
     }
 
     public function getLemburId($id) {
