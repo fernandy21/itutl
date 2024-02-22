@@ -223,15 +223,13 @@
 						$('#btn-ip').click(function () {
 							if ($("#tabel_ip").is(':hidden')) {
 								$("#tabel_ip").prop('hidden', false);
-							} else {
-								$("#tabel_ip").prop('hidden', true);
+								$("#tabel_data_lembur").prop('hidden', true);
 							}
 						})
 						$('#btn-lembur').click(function () {
 							if ($("#tabel_data_lembur").is(':hidden')) {
 								$("#tabel_data_lembur").prop('hidden', false);
-							} else {
-								$("#tabel_data_lembur").prop('hidden', true);
+								$("#tabel_ip").prop('hidden', true);
 							}
 						})
   					</script>
