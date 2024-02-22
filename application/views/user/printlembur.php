@@ -77,43 +77,72 @@ $tanggal = date('Y-m-d');
         </style>
     </head>
     <body>
-        <?php foreach ($data as $row) :
-            
-// echo '<pre>';
-// var_dump($row);
-// echo '</pre>';
-// die();
+        
+        <?php 
+        if(count($data)==1){?>
+                <div id="printArea" class="print_lembur_<?php echo $data->Nama; ?>" style="margin:5mm; width: 105mm; height: 148mm; border: 1px solid; background-image: url(<?= base_url('assets/img/bgk-lembur.png')?>); background-size: cover; background-repeat: no-repeat;">
+                    <!-- Your content goes here -->
+                    <div>
+                        <div style="position:relative; left:33mm; top: 35.5mm;">
+                            Qhusnul Arienda, Amd. Farm<br>
+                            Kepala Unit IT
+                        </div>
+                    <div style="position:relative; left:33mm; top: 41.8mm;">
+                        <?php echo $data->Nama; ?><br>
+                        STAFF IT
+                    </div>
+                    <div style="position:relative; left:33mm; top: 54mm;">
+                        <?php echo $data->tanggal; ?>, <?php echo $data->durasi; ?><br>
+                    </div>
+                    <div style="position:relative; left:9mm; top: 60mm;">
+                        <?php echo nl2br($data->perihal); ?><br>
+                    </div>
+                    <div style="position:relative; right:-66mm ;top: 73mm;">
+                        Martpaura, <?php echo tanggal_indo($tanggal, false) ?><br><br><br>
+                        Qhusnul Arienda, Amd. Farm<br>
+                        159.011113
+                    </div>
+                    <div style="position:relative; left:-29mm; top: 63.3mm; text-align: center;">
+                        <?php echo $data->Nama; ?><br>
+                        <?php echo $data->NIK; ?><br>
+                    </div>
+                </div>
+                </div>
+        <?php }else{
+                    foreach ($data as $row) :
+                    ?>                
+                    <div id="printArea" class="print_lembur_<?php echo $row->Nama; ?>" style="margin:5mm; width: 105mm; height: 148mm; border: 1px solid; background-image: url(<?= base_url('assets/img/bgk-lembur.png')?>); background-size: cover; background-repeat: no-repeat;">
+                        <!-- Your content goes here -->
+                        <div>
+                            <div style="position:relative; left:33mm; top: 35.5mm;">
+                                Qhusnul Arienda, Amd. Farm<br>
+                                Kepala Unit IT
+                            </div>
+                        <div style="position:relative; left:33mm; top: 41.8mm;">
+                            <?php echo $row->Nama; ?><br>
+                            STAFF IT
+                        </div>
+                        <div style="position:relative; left:33mm; top: 54mm;">
+                            <?php echo $row->tanggal; ?>, <?php echo $row->durasi; ?><br>
+                        </div>
+                        <div style="position:relative; left:9mm; top: 60mm;">
+                            <?php echo nl2br($row->perihal); ?><br>
+                        </div>
+                        <div style="position:relative; right:-66mm ;top: 73mm;">
+                            Martpaura, <?php echo tanggal_indo($tanggal, false) ?><br><br><br>
+                            Qhusnul Arienda, Amd. Farm<br>
+                            159.011113
+                        </div>
+                        <div style="position:relative; left:-29mm; top: 63.3mm; text-align: center;">
+                            <?php echo $row->Nama; ?><br>
+                            <?php echo $row->NIK; ?><br>
+                        </div>
+                    </div>
+                </div>
+                <?php endforeach;
+                }
+                ?>
+        
 
-            ?>
-            
-        <div id="printArea" class="print_lembur_<?php echo $row->Nama; ?>" style="margin:5mm; width: 105mm; height: 148mm; border: 1px solid; background-image: url(<?= base_url('assets/img/bgk-lembur.png')?>); background-size: cover; background-repeat: no-repeat;">
-            <!-- Your content goes here -->
-            <div>
-                <div style="position:relative; left:33mm; top: 35.5mm;">
-                    Qhusnul Arienda, Amd. Farm<br>
-                    Kepala Unit IT
-                </div>
-                <div style="position:relative; left:33mm; top: 41.8mm;">
-                    <?php echo $row->Nama; ?><br>
-                    STAFF IT
-                </div>
-                <div style="position:relative; left:33mm; top: 54mm;">
-                    <?php echo $row->tanggal; ?>, <?php echo $row->durasi; ?><br>
-                </div>
-                <div style="position:relative; left:9mm; top: 60mm;">
-                    <?php echo nl2br($row->perihal); ?><br>
-                </div>
-                <div style="position:relative; right:-66mm ;top: 73mm;">
-                    Martpaura, <?php echo tanggal_indo($tanggal, false) ?><br><br><br>
-                    Qhusnul Arienda, Amd. Farm<br>
-                    159.011113
-                </div>
-                <div style="position:relative; left:-29mm; top: 63.3mm; text-align: center;">
-                    <?php echo $row->Nama; ?><br>
-                    <?php echo $row->NIK; ?><br>
-                </div>
-            </div>
-        </div>
-        <?php endforeach?>
     </body>
 </html>
