@@ -91,7 +91,21 @@
 											<!-- <button type="button" class="btn btn-primary btn-sm" data-toggle="modal" data-target="#tambahipModal">Tambah IP</button> -->
 										</h2>
 										<div class="col-xl">
-											<div class="row">
+											<div class="nav-wrapper mx-3">
+												<h5>PRINT LEMBUR SEBULAN</h5>
+												<ul class="nav nav-pills nav-fill flex-column flex-md-row" id="tabs-icons-text" role="tablist">
+													<?php 
+													$i = 0;
+													foreach($lemburpernama as $row):
+													$i++;
+													?>
+													<li class="nav-item mb-4">
+														<a class="nav-link mb-sm-3 mb-md-0 tab-nav" id="tabs-icons-text-<?=$i?>-tab" data-toggle="tab" href="#tabs-icons-text-<?=$i?>" role="tab" aria-controls="tabs-icons-text-<?=$i?>" aria-selected="true"><?= $row->Nama ?></a>
+													</li>
+													<?php endforeach ?>
+												</ul>
+											</div>
+											<div class="row">								
 												<div class="col-md-6">
 													<!-- Search Bar -->
 													<input type="text" id="searchLembur" class="form-control mb-3" placeholder="Search...">

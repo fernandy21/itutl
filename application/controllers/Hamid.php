@@ -20,13 +20,18 @@ class Hamid extends CI_Controller{
         $ip = $this->ip->getIpList();
         $lembur = $this->lembur->getLemburList();
 
+        // $bulan = date('m');
+        // $bulan = date('Y');
+        // $lemburpernama = $this->lembur->getLemburGroupNamaByBulan($bulan,$tahun);
+        $lemburpernama = $this->lembur->getLemburGroupNamaByBulan();
+
         // echo '<pre>';
-        // var_dump($ip);
+        // var_dump($lemburpernama);
         // echo '</pre>';
         // die($ip);
         // print_r($ip);die();
 
-        $this->load->view('template',compact('content','titleTag','ip','lembur'));
+        $this->load->view('template',compact('content','titleTag','ip','lembur','lemburpernama'));
     }
 
     public function printLembur(){

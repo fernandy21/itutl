@@ -25,8 +25,6 @@ class Lembur_model extends CI_Model{
     }
 
     public function getLemburId($id) {
-        // Fetch data by ID from the database
-        // return $this->db->where('id',$id)->get($this->table)->row();
         $query = $this->db->select('*')
                         ->from('lembur_it')
                         ->join('user_it', 'lembur_it.username = user_it.username')
@@ -34,6 +32,22 @@ class Lembur_model extends CI_Model{
                         ->get();
         return $result = $query->row();
 
+    }
+    public function getLemburGroupNamaByBulan() {
+        return $query = $this->db->select('*')
+                  ->from('lembur_it')
+                  ->where('month(lembur_it.tanggal)',date('m'))
+                  ->where('year(lembur_it.tanggal)',date('Y'))
+                  ->join('user_it', 'lembur_it.username = user_it.username')
+                  ->group_by('user_it.nama')
+                  ->order_by('user_it.nama')
+                  ->get()
+                  ->result();
+                        
+        // echo '<pre>';
+        // var_dump($query);
+        // echo '</pre>';
+        // die();
     }
 
     // public function insertIp($data){
