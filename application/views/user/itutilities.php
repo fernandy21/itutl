@@ -93,17 +93,32 @@
 										<div class="col-xl">
 											<div class="nav-wrapper mx-3">
 												<h5>PRINT LEMBUR SEBULAN</h5>
-												<ul class="nav nav-pills nav-fill flex-column flex-md-row" id="tabs-icons-text" role="tablist">
-													<?php 
-													$i = 0;
-													foreach($lemburpernama as $row):
-													$i++;
-													?>
-													<li class="nav-item mb-4">
-														<a class="nav-link mb-sm-3 mb-md-0 tab-nav" id="tabs-icons-text-<?=$i?>-tab" data-toggle="tab" href="#tabs-icons-text-<?=$i?>" role="tab" aria-controls="tabs-icons-text-<?=$i?>" aria-selected="true"><?= $row->Nama ?></a>
-													</li>
-													<?php endforeach ?>
-												</ul>
+												<table id="dataTable-Lembur" class="table">
+														<thead style="position: -webkit-sticky; position: sticky; top: 0; padding: 5px; background-color: #cadbe8; z-index: 1;">
+															<tr>
+																<th>NO</th>
+																<th>NAMA</th>
+																<th>BULAN</th>
+																<th>AKSI</th>
+															</tr>
+														</thead>
+														<tbody>
+														<?php 
+															$i = 0;
+															foreach($lemburpernama as $row):
+															$i++;
+															?>
+															<tr>
+																<td><?=$i?></td>
+																<td><?=$row->nama?></td>
+																<td><?=$row->bulan?></td>
+																<td>
+																	<a class="btn btn-primary btn-sm" href="printlembur?Nama=<?php echo $row->nama; ?>" target="_blank" >Cetak Perbulan</a>
+																</td>
+															</tr>
+															<?php endforeach ?>
+														</tbody>
+													</table>
 											</div>
 											<div class="row">								
 												<div class="col-md-6">
