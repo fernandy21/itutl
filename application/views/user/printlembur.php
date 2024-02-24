@@ -1,6 +1,12 @@
 <?php
 // Get the ID from the URL parameter
 $id = $_GET['id'];
+if (strpos($id, ',') !== false) {
+    $id = explode(',', $id);
+}
+
+// If it's a single ID, convert it to an array
+$id = (array) $id;
 $nama = $_GET['Nama'];
 
 // print_r($id);die();
@@ -10,7 +16,8 @@ $data = $this->lembur->getLemburId($id);
 $datanama = $this->lembur->getLemburNama($nama);
 // print_r($data);die();
 // echo '<pre>';
-// var_dump($datanama);
+// var_dump($id);
+// var_dump($data);
 // echo '</pre>';
 // die();
 function tanggal_indo($tanggal, $cetak_hari = false)
@@ -89,41 +96,44 @@ $tanggal = date('Y-m-d');
 
 <body onload="window.print()">
     <?php
-    if (isset($data)) { ?>
-        <div id="printArea" class="print_lembur_<?php echo $data->Nama; ?>" style="margin:5mm; width: 105mm; height: 148mm; border: 1px solid; background-image: url(<?= base_url('assets/img/bgk-lembur.png') ?>); background-size: cover; background-repeat: no-repeat;">
-            <!-- Your content goes here -->
-            <div>
-                <div style="position:relative; left:33mm; top: 35.5mm;">
-                    Qhusnul Arienda, Amd. Farm<br>
-                    Kepala Unit IT
-                </div>
-                <div style="position:relative; left:33mm; top: 41.8mm;">
-                    <?php echo $data->Nama; ?><br>
-                    STAFF IT
-                </div>
-                <div style="position:relative; left:33mm; top: 54mm;">
-                    <?php echo $data->tanggal; ?>, <?php echo $data->durasi; ?><br>
-                </div>
-                <div style="position:relative; left:9mm; top: 60mm;">
-                    <?php echo nl2br($data->perihal); ?><br>
-                </div>
-                <div style="position:relative; right:-30mm ;top: 63mm; text-align: center; line-height: 1;">
-                    Martapura, <?php echo tanggal_indo($tanggal, false) ?><br>
-                    Pemberi Tugas,<br><br><br>
-                    Qhusnul Arienda, Amd. Farm<br>
-                    159.011113
-                </div>
-                <div style="position:relative; left:-29mm; top: 47.2mm; text-align: center; line-height: 1;">
-                    Penerima Tugas,<br><br><br>
-                    <?php echo $row->Nama; ?><br>
-                    <?php echo $row->NIK; ?><br>
-                </div>
-                <div style="position:relative; left:47.4mm; top: 50mm; line-height: 1;">
-                    Mengetahui
+    if (isset($data)) {
+        foreach ($data as $row) :
+    ?>
+            <div id="printArea" class="print_lembur_<?php echo $row->id; ?>" style="margin:5mm; width: 105mm; height: 148mm; border: 1px solid; background-image: url(<?= base_url('assets/img/bgk-lembur.png') ?>); background-size: cover; background-repeat: no-repeat;">
+                <!-- Your content goes here -->
+                <div>
+                    <div style="position:relative; left:33mm; top: 35.5mm;">
+                        Qhusnul Arienda, Amd. Farm<br>
+                        Kepala Unit IT
+                    </div>
+                    <div style="position:relative; left:33mm; top: 41.8mm;">
+                        <?php echo $row->Nama; ?><br>
+                        STAFF IT
+                    </div>
+                    <div style="position:relative; left:33mm; top: 54mm;">
+                        <?php echo $row->tanggal; ?>, <?php echo $row->durasi; ?><br>
+                    </div>
+                    <div style="position:relative; left:9mm; top: 60mm;">
+                        <?php echo nl2br($row->perihal); ?><br>
+                    </div>
+                    <div style="position:relative; right:-30mm ;top: 63mm; text-align: center; line-height: 1;">
+                        Martapura, <?php echo tanggal_indo($tanggal, false) ?><br>
+                        Pemberi Tugas,<br><br><br>
+                        Qhusnul Arienda, Amd. Farm<br>
+                        159.011113
+                    </div>
+                    <div style="position:relative; left:-29mm; top: 47.2mm; text-align: center; line-height: 1;">
+                        Penerima Tugas,<br><br><br>
+                        <?php echo $row->Nama; ?><br>
+                        <?php echo $row->NIK; ?><br>
+                    </div>
+                    <div style="position:relative; left:47.4mm; top: 50mm; line-height: 1;">
+                        Mengetahui
+                    </div>
                 </div>
             </div>
-        </div>
-        <?php } else {
+        <?php endforeach;
+    } else {
         foreach ($datanama as $row) :
         ?>
             <div id="printArea" class="print_lembur_<?php echo $row->Nama; ?>" style="margin:5mm; width: 105mm; height: 148mm; border: 1px solid; background-image: url(<?= base_url('assets/img/bgk-lembur.png') ?>); background-size: cover; background-repeat: no-repeat;">

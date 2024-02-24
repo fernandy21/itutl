@@ -20,148 +20,150 @@
   							<!-- TAB KIRI -->
   							<div class="col-md-2">
 
-								<div class="card mt-3">
+  								<div class="card mt-3">
 
-									<div class="card-body pt-2">
-										<span class="text-gradient text-primary text-uppercase text-xs font-weight-bold my-2">IT Utilities</span>
-										<a href="javascript:;" class="card-title h5 d-block text-darker">
+  									<div class="card-body pt-2">
+  										<span class="text-gradient text-primary text-uppercase text-xs font-weight-bold my-2">IT Utilities</span>
+  										<a href="javascript:;" class="card-title h5 d-block text-darker">
   											Operasional Unit IT
-										</a>
-										
-										<button class="btn btn-icon mb-3 btn-3 btn-primary btn-sm" id="btn-ip" type="button">
-											<span class="btn-inner--icon"><i class="ni ni-button-play"></i></span>
-											<span class="btn-inner--text"> IP List</span>
-										</button>
-										<button class="btn btn-icon mb-3 btn-3 btn-primary btn-sm" id="btn-lembur" type="button">
-											<span class="btn-inner--icon"><i class="ni ni-button-play"></i></span>
-											<span class="btn-inner--text"> Data Lembur</span>
-										</button>
+  										</a>
 
-									</div>
-								</div>
+  										<button class="btn btn-icon mb-3 btn-3 btn-primary btn-sm" id="btn-ip" type="button">
+  											<span class="btn-inner--icon"><i class="ni ni-button-play"></i></span>
+  											<span class="btn-inner--text"> IP List</span>
+  										</button>
+  										<button class="btn btn-icon mb-3 btn-3 btn-primary btn-sm" id="btn-lembur" type="button">
+  											<span class="btn-inner--icon"><i class="ni ni-button-play"></i></span>
+  											<span class="btn-inner--text"> Data Lembur</span>
+  										</button>
 
-							</div>
-							<!-- TAB TENGAH -->
+  									</div>
+  								</div>
+
+  							</div>
+  							<!-- TAB TENGAH -->
   							<div class="col-md-10">
   								<!-- Tabel IP -->
-								<div id="tabel_ip" >
-									<h2 class="mt-3">IP LIST
-										<button type="button" class="btn btn-primary btn-sm" data-toggle="modal" data-target="#tambahipModal">Tambah IP</button>
-									</h2>
-									<div class="col-xl">
-										<div class="row">
-											<div class="col-md-6">
-												<!-- Search Bar -->
-												<input type="text" id="searchIp" class="form-control mb-3" placeholder="Search...">
-											</div>
-										</div>
-										<div class="row" style="height: 300px; overflow: scroll;">
-											<div class="col-xl">
-												<table id="dataTable-IP" class="table">
-													<thead style="position: -webkit-sticky; position: sticky; top: 0; padding: 5px; background-color: #cadbe8; z-index: 1;">
-														<tr>
-															<th>NO</th>
-															<th>IP ADDRESS</th>
-															<th>NAME</th>
-															<th>AKSI</th>
-														</tr>
-													</thead>
-													<tbody>
-														<?php $i = 1; ?>
-														<?php foreach ($ip as $row) : ?>
-															<tr>
-																<td><?php echo $i++; ?></td>
-																<td><?php echo $row->ipaddr; ?></td>
-																<td><?php echo $row->name; ?></td>
-																<td>
-																	<button type="button" class="btn btn-success btn-sm" data-toggle="modal" data-target="#editModal<?php echo $row->id; ?>">EDIT</button>
-																	<button type="button" class="btn btn-danger btn-sm" onclick="confirmDelete(<?php echo $row->id; ?>)">DELETE</button>
-																</td>
-															</tr>
-														<?php endforeach ?>
-													</tbody>
-												</table>
-											</div>
-										</div>
-									</div>
-								</div>
-								<div id="tabel_data_lembur" hidden>
-									<!-- Tabel IP -->
-									<h2 class="mt-3">LEMBUR LIST
-											<!-- <button type="button" class="btn btn-primary btn-sm" data-toggle="modal" data-target="#tambahipModal">Tambah IP</button> -->
-										</h2>
-										<div class="col-xl">
-											<div class="nav-wrapper mx-3">
-												<h5>PRINT LEMBUR SEBULAN</h5>
-												<table id="dataTable-Lembur" class="table">
-														<thead style="position: -webkit-sticky; position: sticky; top: 0; padding: 5px; background-color: #cadbe8; z-index: 1;">
-															<tr>
-																<th>NO</th>
-																<th>NAMA</th>
-																<th>BULAN</th>
-																<th>AKSI</th>
-															</tr>
-														</thead>
-														<tbody>
-														<?php 
-															$i = 0;
-															foreach($lemburpernama as $row):
+  								<div id="tabel_ip">
+  									<h2 class="mt-3">IP LIST
+  										<button type="button" class="btn btn-primary btn-sm" data-toggle="modal" data-target="#tambahipModal">Tambah IP</button>
+  									</h2>
+  									<div class="col-xl">
+  										<div class="row">
+  											<div class="col-md-6">
+  												<!-- Search Bar -->
+  												<input type="text" id="searchIp" class="form-control mb-3" placeholder="Search...">
+  											</div>
+  										</div>
+  										<div class="row" style="height: 300px; overflow: scroll;">
+  											<div class="col-xl">
+  												<table id="dataTable-IP" class="table">
+  													<thead style="position: -webkit-sticky; position: sticky; top: 0; padding: 5px; background-color: #cadbe8; z-index: 1;">
+  														<tr>
+  															<th>NO</th>
+  															<th>IP ADDRESS</th>
+  															<th>NAME</th>
+  															<th>AKSI</th>
+  														</tr>
+  													</thead>
+  													<tbody>
+  														<?php $i = 1; ?>
+  														<?php foreach ($ip as $row) : ?>
+  															<tr>
+  																<td><?php echo $i++; ?></td>
+  																<td><?php echo $row->ipaddr; ?></td>
+  																<td><?php echo $row->name; ?></td>
+  																<td>
+  																	<button type="button" class="btn btn-success btn-sm" data-toggle="modal" data-target="#editModal<?php echo $row->id; ?>">EDIT</button>
+  																	<button type="button" class="btn btn-danger btn-sm" onclick="confirmDelete(<?php echo $row->id; ?>)">DELETE</button>
+  																</td>
+  															</tr>
+  														<?php endforeach ?>
+  													</tbody>
+  												</table>
+  											</div>
+  										</div>
+  									</div>
+  								</div>
+  								<div id="tabel_data_lembur" hidden>
+  									<!-- Tabel IP -->
+  									<h2 class="mt-3">LEMBUR LIST
+  										<!-- <button type="button" class="btn btn-primary btn-sm" data-toggle="modal" data-target="#tambahipModal">Tambah IP</button> -->
+  										<!-- <a class="btn btn-primary btn-sm" href="printlembur?bulan=<?php echo date('m'); ?>" target="_blank" >Cetak Perbulan</a> -->
+  									</h2>
+  									<div class="col-xl">
+  										<div class="nav-wrapper mx-3">
+  											<h5>PRINT LEMBUR SEBULAN</h5>
+  											<table id="dataTable-Lembur" class="table">
+  												<thead style="position: -webkit-sticky; position: sticky; top: 0; padding: 5px; background-color: #cadbe8; z-index: 1;">
+  													<tr>
+  														<th>NO</th>
+  														<th>NAMA</th>
+  														<th>BULAN</th>
+  														<th>AKSI</th>
+  													</tr>
+  												</thead>
+  												<tbody>
+  													<?php
+														$i = 0;
+														foreach ($lemburpernama as $row) :
 															$i++;
-															?>
-															<tr>
-																<td><?=$i?></td>
-																<td><?=$row->nama?></td>
-																<td><?=$row->bulan?></td>
-																<td>
-																	<a class="btn btn-primary btn-sm" href="printlembur?Nama=<?php echo $row->nama; ?>" target="_blank" >Cetak Perbulan</a>
-																</td>
-															</tr>
-															<?php endforeach ?>
-														</tbody>
-													</table>
-											</div>
-											<div class="row">								
-												<div class="col-md-6">
-													<!-- Search Bar -->
-													<input type="text" id="searchLembur" class="form-control mb-3" placeholder="Search...">
-												</div>
-											</div>
-											<div class="row" style="height: 300px; overflow: scroll;">
-												<div class="col-xl">
-													<table id="dataTable-Lembur" class="table">
-														<thead style="position: -webkit-sticky; position: sticky; top: 0; padding: 5px; background-color: #cadbe8; z-index: 1;">
-															<tr>
-																<th>NO</th>
-																<th>ID</th>
-																<th>NAMA</th>
-																<th>TANGGAL/JAM</th>
-																<th>GAWIAN</th>
-																<th>AKSI</th>
-															</tr>
-														</thead>
-														<tbody>
-															<?php $i = 1; ?>
-															<?php foreach ($lembur as $row) : ?>
-																<tr>
-																	<td><?php echo $i++; ?></td>
-																	<td><?php echo $row->id; ?></td>
-																	<td><?php echo $row->Nama; ?></td>
-																	<td><?php echo $row->tanggal; ?>, <?php echo $row->durasi; ?></td>
-																	<td><?php echo $row->sub_judul; ?></td>
-																	<td>
-																	<a type="button" href="printlembur?id=<?php echo $row->id; ?>" target="_blank" class="btn btn-success btn-sm">PRINT</a>
-																		<!-- <button type="button" class="btn btn-success btn-sm" data-toggle="modal" data-target="#editModal<?php echo $row->id; ?>">PRINT</button> -->
-																		<!-- <button type="button" class="btn btn-success btn-sm" data-toggle="modal" data-target="#editModal<?php echo $row->id; ?>">EDIT</button>
-																		<button type="button" class="btn btn-danger btn-sm" onclick="confirmDelete(<?php echo $row->id; ?>)">DELETE</button> -->
-																	</td>
-																</tr>
-															<?php endforeach ?>
-														</tbody>
-													</table>
-												</div>
-											</div>
-										</div>
-								</div>  								
+														?>
+  														<tr>
+  															<td><?= $i ?></td>
+  															<td><?= $row->nama ?></td>
+  															<td><?= $row->bulan ?></td>
+  															<td>
+  																<a class="btn btn-primary btn-sm" href="printlembur?Nama=<?php echo $row->nama; ?>" target="_blank">Cetak Perbulan</a>
+  															</td>
+  														</tr>
+  													<?php endforeach ?>
+  												</tbody>
+  											</table>
+  										</div>
+  										<div class="row">
+  											<div class="col-md-6">
+  												<!-- Search Bar -->
+  												<input type="text" id="searchLembur" class="form-control mb-3" placeholder="Search...">
+  											</div>
+  										</div>
+  										<div class="row" style="height: 300px; overflow: scroll;">
+  											<div class="col-xl">
+  												<table id="dataTable-Lembur" class="table">
+  													<thead style="position: -webkit-sticky; position: sticky; top: 0; padding: 5px; background-color: #cadbe8; z-index: 1;">
+  														<tr>
+  															<th>NO</th>
+  															<th>ID</th>
+  															<th>NAMA</th>
+  															<th>TANGGAL/JAM</th>
+  															<th>GAWIAN</th>
+  															<th>SELECT</th>
+  														</tr>
+  													</thead>
+  													<tbody>
+  														<?php $i = 1; ?>
+  														<?php foreach ($lembur as $row) : ?>
+  															<tr>
+  																<td><?php echo $i++; ?></td>
+  																<td><?php echo $row->id; ?></td>
+  																<td><?php echo $row->Nama; ?></td>
+  																<td><?php echo $row->tanggal; ?>, <?php echo $row->durasi; ?></td>
+  																<td><?php echo $row->sub_judul; ?></td>
+  																<td>
+  																	<input type="checkbox" class="print-checkbox" value="<?php echo $row->id; ?>">
+  																</td>
+  															</tr>
+  														<?php endforeach ?>
+  													</tbody>
+  												</table>
+  											</div>
+  										</div>
+  										<span>
+  											<button id="print-selected" class="btn btn-primary">Print Selected</button>
+  											<button id="print-all" class="btn btn-primary">Print All</button>
+  										</span>
+  									</div>
+  								</div>
   							</div>
 
   						</div>
@@ -249,31 +251,47 @@
   							}
   						}
 
-						$('#btn-ip').click(function () {
-							if ($("#tabel_ip").is(':hidden')) {
-								$("#tabel_ip").prop('hidden', false);
-								$("#tabel_data_lembur").prop('hidden', true);
-							}
-						})
-						$('#btn-lembur').click(function () {
-							if ($("#tabel_data_lembur").is(':hidden')) {
-								$("#tabel_data_lembur").prop('hidden', false);
-								$("#tabel_ip").prop('hidden', true);
-							}
-						})
+  						$('#btn-ip').click(function() {
+  							if ($("#tabel_ip").is(':hidden')) {
+  								$("#tabel_ip").prop('hidden', false);
+  								$("#tabel_data_lembur").prop('hidden', true);
+  							}
+  						})
+  						$('#btn-lembur').click(function() {
+  							if ($("#tabel_data_lembur").is(':hidden')) {
+  								$("#tabel_data_lembur").prop('hidden', false);
+  								$("#tabel_ip").prop('hidden', true);
+  							}
+  						})
   					</script>
-					<script>
-					// 	function printData(id) {
-					// 		// Open a new window
+  					<script>
+  						$(document).ready(function() {
+  							// Check all checkbox
+  							$('#print-all').click(function() {
+  								var allIds = [];
+  								$('.print-checkbox').each(function() {
+  									allIds.push($(this).val());
+  								});
+  								if (allIds.length > 0) {
+  									var printUrl = 'printlembur?id=' + encodeURIComponent(allIds.join(',')); // Pass all IDs as query parameter
+  									window.open(printUrl, '_blank');
+  								} else {
+  									alert('No items available to print.');
+  								}
+  							});
 
-					// 		$data = <?php $this->lembur->getLemburId(id); ?>
-					// 		console.log($data);
-					// 		var printWindow = window.open('printlembur?id=' + id, '_blank');
-							
-							
-					// 		// Print the new page
-					// 		printWindow.print();
-					// 	}
-					// </script>
-
-					
+  							// Print selected
+  							$('#print-selected').click(function() {
+  								var selectedIds = [];
+  								$('.print-checkbox:checked').each(function() {
+  									selectedIds.push($(this).val());
+  								});
+  								if (selectedIds.length > 0) {
+  									var printUrl = 'printlembur?id=' + encodeURIComponent(selectedIds.join(',')); // Pass selected IDs as query parameter
+  									window.open(printUrl, '_blank');
+  								} else {
+  									alert('Please select at least one item to print.');
+  								}
+  							});
+  						});
+  					</script>

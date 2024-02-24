@@ -26,11 +26,13 @@ class Lembur_model extends CI_Model{
 
     public function getLemburId($id) {
         $query = $this->db->select('*')
-                        ->from('lembur_it')
-                        ->join('user_it', 'lembur_it.username = user_it.username')
-                        ->where('lembur_it.id', $id)
-                        ->get();
-        return $result = $query->row();
+                    ->from('lembur_it')
+                    ->join('user_it', 'lembur_it.username = user_it.username')
+                    ->where_in('lembur_it.id', $id)
+                    ->get();
+
+    // Return the result
+    return $query->result();
 
     }
 
@@ -56,7 +58,10 @@ class Lembur_model extends CI_Model{
             ->get()
             ->result();
 
-
+        // echo '<pre>';
+        // var_dump($query_result);
+        // echo '</pre>';
+        // die();
 
         // Array to map month number to Bahasa Indonesia month name
         $month_names = array(
