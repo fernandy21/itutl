@@ -23,6 +23,7 @@ class Login extends CI_Controller{
 
         if(!$this->user->run($data)){
             $this->session->set_flashdata('pesan_error','Username atau Password salah');
+// print_r($data);die();
             redirect('login');
         }else{
             $id_user = $this->session->userdata('id');

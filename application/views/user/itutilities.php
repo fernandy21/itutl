@@ -36,7 +36,10 @@
   											<span class="btn-inner--icon"><i class="ni ni-button-play"></i></span>
   											<span class="btn-inner--text"> Data Lembur</span>
   										</button>
-
+										<a class="btn btn-icon mb-3 btn-3 btn-primary btn-sm" href="<?= base_url('logout') ?>">
+  											<span class="btn-inner--icon"><i class="ni ni-button-play"></i></span>
+  											<span>Logout</span>
+										</a>
   									</div>
   								</div>
 

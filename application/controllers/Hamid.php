@@ -8,10 +8,10 @@ class Hamid extends CI_Controller{
         $this->load->library(['session','form_validation']);
         $this->load->model('Ip_model','ip',true);
         $this->load->model('Lembur_model','lembur',true);
-        // $login = $this->session->userdata('login');
-        // if(!$login){
-        //     redirect('login');
-        // }
+        $login = $this->session->userdata('login');
+        if(!$login){
+        redirect('login');
+        }
     }
 
     public function index(){
