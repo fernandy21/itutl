@@ -19,15 +19,17 @@
   						<div class="row">
   							<!-- TAB KIRI -->
   							<div class="col-md-2">
-
   								<div class="card mt-3">
-
   									<div class="card-body pt-2">
   										<span class="text-gradient text-primary text-uppercase text-xs font-weight-bold my-2">IT Utilities</span>
   										<a href="javascript:;" class="card-title h5 d-block text-darker">
   											Operasional Unit IT
   										</a>
 
+  										<button class="btn btn-icon mb-3 btn-3 btn-primary btn-sm" id="btn-logdai" type="button">
+  											<span class="btn-inner--icon"><i class="ni ni-button-play"></i></span>
+  											<span class="btn-inner--text"> Daily Log</span>
+  										</button>
   										<button class="btn btn-icon mb-3 btn-3 btn-primary btn-sm" id="btn-ip" type="button">
   											<span class="btn-inner--icon"><i class="ni ni-button-play"></i></span>
   											<span class="btn-inner--text"> IP List</span>
@@ -42,12 +44,107 @@
 										</a>
   									</div>
   								</div>
-
   							</div>
   							<!-- TAB TENGAH -->
   							<div class="col-md-10">
-  								<!-- Tabel IP -->
-  								<div id="tabel_ip">
+  								<div id="tabel_logdai">
+  									<h2 class="mt-3">Daily Log
+  										<button type="button" class="btn btn-primary btn-sm" data-toggle="modal" data-target="#tambahlogdaiModal">Tambah Log</button>
+  									</h2>
+  									<div class="col-xl">
+  										<div class="row">
+  											<div class="col-md-4">
+  												<input type="text" id="searchIp" class="form-control mb-3" placeholder="Search...">
+  											</div>
+										</div>
+										<div class="nav-wrapper mx-3">
+											<ul class="nav nav-pills nav-fill flex-column flex-md-row" id="tabs-icons-text" role="tablist">
+												<?php $i = 0; ?>
+												<li class="nav-item mb-4">
+													<a class="nav-link mb-sm-3 mb-md-0 tab-nav" id="tabs-icons-text-<?=$i?>-tab" data-toggle="tab" href="#tabs-icons-text-<?=$i?>" role="tab" aria-controls="tabs-icons-text-<?=$i?>" aria-selected="true">ALL</a>
+												</li>
+												<?php foreach ($logname as $row) : $i++; ?>
+												<li class="nav-item mb-4">
+													<a class="nav-link mb-sm-3 mb-md-0 tab-nav" id="tabs-icons-text-<?=$i?>-tab" data-toggle="tab" href="#tabs-icons-text-<?=$i?>" role="tab" aria-controls="tabs-icons-text-<?=$i?>" aria-selected="true"><?= $row->Nama ?></a>
+												</li>
+												<?php endforeach ?>
+											</ul>
+										</div>
+										<div class="row" style="height: 300px; overflow: auto;">
+											<div class="col-xl">
+												<div class="tab-content">
+													<?php $a = 0; ?>
+													<div class="tab-pane fade" id="tabs-icons-text-<?= $a ?>" role="tabpanel" aria-labelledby="tabs-icons-text-<?= $a ?>-tab">
+														<table id="dataTable-IPb" class="table">
+															<thead style="position: -webkit-sticky; position: sticky; top: 0; padding: 5px; background-color: #cadbe8; z-index: 1;">
+																<tr>
+																	<th>NO</th>
+																	<th>NAMA</th>
+																	<th>TANGGAL</th>
+																	<th>JUDUL LOG</th>
+																	<th>DESKRIPSI LOG</th>
+																	<th>CATATAN</th>
+																	<th>AKSI</th>
+																</tr>
+															</thead>
+															<tbody>
+																<?php $i = 1; foreach ($log as $row) : ?>
+																	<tr>
+																		<td><?php echo $i++; ?></td>
+																		<td><?php echo $row->Nama; ?></td>
+																		<td><?php echo $row->tanggal; ?></td>
+																		<td><?php echo $row->judul_act; ?></td>
+																		<td><?php echo $row->deskripsi_act; ?></td>
+																		<td><?php echo $row->catatan; ?></td>
+																		<td>
+																			<button type="button" class="btn btn-success btn-sm" data-toggle="modal" data-target="#editModal<?php echo $row->id; ?>" disabled>EDIT</button>
+																			<button type="button" class="btn btn-danger btn-sm" onclick="confirmDelete(<?php echo $row->id; ?>)" disabled>DELETE</button>
+																		</td>
+																	</tr>
+																<?php endforeach ?>
+															</tbody>
+														</table>
+													</div>
+													<?php 
+														for ($i = 0; $i < $jumlahlogname; $i++) : $a++; ?>
+													<div class="tab-pane fade" id="tabs-icons-text-<?= $a ?>" role="tabpanel" aria-labelledby="tabs-icons-text-<?= $a ?>-tab">
+														<table id="dataTable-IP" class="table">
+															<thead style="position: -webkit-sticky; position: sticky; top: 0; padding: 5px; background-color: #cadbe8; z-index: 1;">
+																<tr>
+																	<th>NO</th>
+																	<th>NAMA</th>
+																	<th>TANGGAL</th>
+																	<th>JUDUL LOG</th>
+																	<th>DESKRIPSI LOG</th>
+																	<th>CATATAN</th>
+																	<th>AKSI</th>
+																</tr>
+															</thead>
+															<tbody>
+																<?php for ($j = 0; $j < count($data[$i]); $j++) :?>
+																<tr>
+																	<td><?php echo $j+1; ?></td>
+																	<td><?php echo $data[$i][$j]->Nama; ?></td>
+																	<td><?php echo $data[$i][$j]->tanggal; ?></td>
+																	<td><?php echo $data[$i][$j]->judul_act; ?></td>
+																	<td><?php echo $data[$i][$j]->deskripsi_act; ?></td>
+																	<td><?php echo $data[$i][$j]->catatan; ?></td>
+																	<td>
+																		<button type="button" class="btn btn-success btn-sm" data-toggle="modal" data-target="#editModal<?php echo $row->id; ?>" disabled>EDIT</button>
+																		<button type="button" class="btn btn-danger btn-sm" onclick="confirmDelete(<?php echo $row->id; ?>)" disabled>DELETE</button>
+																	</td>
+																</tr>
+																<?php endfor?>
+															</tbody>
+														</table>
+													</div>
+													<?php endfor ?>
+												</div>
+											</div>
+										</div>
+  									</div>
+  								</div>
+  								<div id="tabel_ip" hidden>
   									<h2 class="mt-3">IP LIST
   										<button type="button" class="btn btn-primary btn-sm" data-toggle="modal" data-target="#tambahipModal">Tambah IP</button>
   									</h2>
@@ -58,7 +155,7 @@
   												<input type="text" id="searchIp" class="form-control mb-3" placeholder="Search...">
   											</div>
   										</div>
-  										<div class="row" style="height: 300px; overflow: scroll;">
+  										<div class="row" style="height: 300px; overflow: auto;">
   											<div class="col-xl">
   												<table id="dataTable-IP" class="table">
   													<thead style="position: -webkit-sticky; position: sticky; top: 0; padding: 5px; background-color: #cadbe8; z-index: 1;">
@@ -117,7 +214,7 @@
   															<td><?= $row->nama ?></td>
   															<td><?= $row->bulan ?></td>
   															<td>
-  																<a class="btn btn-primary btn-sm" href="printlembur?Nama=<?php echo $row->nama; ?>" target="_blank">Cetak Perbulan</a>
+  																<a class="btn btn-primary btn-sm" href="printlembur?user=<?php echo $row->nama; ?>" target="_blank">Cetak Perbulan</a>
   															</td>
   														</tr>
   													<?php endforeach ?>
@@ -130,7 +227,7 @@
   												<input type="text" id="searchLembur" class="form-control mb-3" placeholder="Search...">
   											</div>
   										</div>
-  										<div class="row" style="height: 300px; overflow: scroll;">
+  										<div class="row" style="height: 300px; overflow: auto;">
   											<div class="col-xl">
   												<table id="dataTable-Lembur" class="table">
   													<thead style="position: -webkit-sticky; position: sticky; top: 0; padding: 5px; background-color: #cadbe8; z-index: 1;">
@@ -169,6 +266,39 @@
   								</div>
   							</div>
 
+  						</div>
+  					</div>
+
+  					<!-- Modal Tambah LOG -->
+  					<div class="modal fade" id="tambahlogdaiModal" tabindex="1" role="dialog" aria-labelledby="tambahlogdaiLabel" aria-hidden="true">
+  						<div class="modal-dialog" role="document">
+  							<div class="modal-content">
+  								<div class="modal-header">
+  									<h3 class="modal-title" id="tambahlogdaiLabel">Tambah LOG</h3>
+  									<button type="button" class="close" data-dismiss="modal" aria-label="Close">
+  										<span aria-hidden="true">&times;</span>
+  									</button>
+  								</div>
+  								<!-- Form Tambah LOG -->
+  								<div class="modal-body">
+  									<!-- <form> -->
+  									<form action="<?= base_url('hamid/createLogdai') ?>" method="post">
+  										<div class="form-group">
+											<select class="custom-select" name="NIK" required>
+												<option selected>Pilih User</option>
+												<?php foreach ($datauser as $row) : ?>
+													<option value="<?php echo $row->NIK; ?>"><?php echo $row->Nama; ?></option>
+												<?php endforeach ?>
+											</select>
+											<input type="date" id="datepicker" class="form-control mt-1 tanggal" name="tanggal" for="tanggal" id="tanggal" placeholder="Tanggal" value="<?= $data->tanggal ?>" required>
+  											<input type="text" class="form-control mt-1 judul_act" name="judul_act" for="judul_act" id="judul_act" placeholder="Judul Aktivitas" value="<?= $data->judul_act ?>" required>
+  											<input type="text" class="form-control mt-1 deskripsi_act" name="deskripsi_act" for="deskripsi_act" id="deskripsi_act" placeholder="Deskripsi Aktivitas" value="<?= $data->deskripsi_act ?>" required>
+  											<input type="text" class="form-control mt-1 catatan" name="catatan" for="catatan" id="catatan" placeholder="Catatan" value="<?= $data->catatan ?>" required>
+  										</div>
+  										<button type="submit" class="btn btn-primary">Tambah LOG</button>
+  									</form>
+  								</div>
+  							</div>
   						</div>
   					</div>
 
@@ -254,16 +384,25 @@
   							}
   						}
 
+  						$('#btn-logdai').click(function() {
+  							if ($("#tabel_logdai").is(':hidden')) {
+  								$("#tabel_logdai").prop('hidden', false);
+  								$("#tabel_data_lembur").prop('hidden', true);
+  								$("#tabel_ip").prop('hidden', true);
+							}
+						})
   						$('#btn-ip').click(function() {
   							if ($("#tabel_ip").is(':hidden')) {
   								$("#tabel_ip").prop('hidden', false);
   								$("#tabel_data_lembur").prop('hidden', true);
-  							}
-  						})
-  						$('#btn-lembur').click(function() {
-  							if ($("#tabel_data_lembur").is(':hidden')) {
-  								$("#tabel_data_lembur").prop('hidden', false);
-  								$("#tabel_ip").prop('hidden', true);
+  								$("#tabel_logdai").prop('hidden', true);
+							}
+						})
+						$('#btn-lembur').click(function() {
+							if ($("#tabel_data_lembur").is(':hidden')) {
+								$("#tabel_data_lembur").prop('hidden', false);
+								$("#tabel_ip").prop('hidden', true);
+								$("#tabel_logdai").prop('hidden', true);
   							}
   						})
   					</script>
@@ -296,5 +435,9 @@
   									alert('Please select at least one item to print.');
   								}
   							});
+							
+							var today = new Date().toISOString().split('T')[0];
+							document.getElementById('datepicker').value = today;
+
   						});
   					</script>
