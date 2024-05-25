@@ -30,6 +30,10 @@
   											<span class="btn-inner--icon"><i class="ni ni-button-play"></i></span>
   											<span class="btn-inner--text"> Daily Log</span>
   										</button>
+										<button class="btn btn-icon mb-3 btn-3 btn-primary btn-sm" id="btn-rmtls" type="button">
+  											<span class="btn-inner--icon"><i class="ni ni-button-play"></i></span>
+  											<span class="btn-inner--text"> Remote List</span>
+  										</button>
   										<button class="btn btn-icon mb-3 btn-3 btn-primary btn-sm" id="btn-ip" type="button">
   											<span class="btn-inner--icon"><i class="ni ni-button-play"></i></span>
   											<span class="btn-inner--text"> IP List</span>
@@ -185,6 +189,48 @@
   										</div>
   									</div>
   								</div>
+								  <div id="tabel_remote" hidden>
+  									<h2 class="mt-3">REMOTE LIST
+  										<button type="button" class="btn btn-primary btn-sm" data-toggle="modal" data-target="#tambahRemoteModal" id="tambah-remote">Tambah REMOTE</button>
+  									</h2>
+  									<div class="col-xl">
+  										<div class="row">
+  											<div class="col-md-6">
+  												<!-- Search Bar -->
+  												<input type="text" id="searchIp" class="form-control mb-3" placeholder="Search...">
+  											</div>
+  										</div>
+  										<div class="row" style="height: 300px; overflow: auto;">
+  											<div class="col-xl">
+  												<table id="dataTable-Rmt" class="table">
+  													<thead style="position: -webkit-sticky; position: sticky; top: 0; padding: 5px; background-color: #cadbe8; z-index: 1;">
+  														<tr>
+  															<th>NO</th>
+  															<th>REMOTE ADDRESS</th>
+  															<th>NAME</th>
+  															<th>AKSI</th>
+  														</tr>
+  													</thead>
+  													<tbody>
+  														<?php 
+														$i = 1; ?>
+  														<?php foreach ($rmt as $row) : ?>
+  															<tr>
+  																<td><?php echo $i++; ?></td>
+  																<td><?php echo $row->RemoteAddr; ?></td>
+  																<td><?php echo $row->Nama; ?></td>
+  																<td>
+  																	<button type="button" class="btn btn-success btn-sm btn-edit-remote" data-remote="<?= $row->RemoteAddr ?>" data-nama="<?= $row->Nama ?>" data-id="<?= $row->id; ?>" data-toggle="modal" data-target="#tambahRemoteModal">EDIT</button>
+  																	<button type="button" class="btn btn-danger btn-sm" onclick="confirmDelete(<?php echo $row->id; ?>)">DELETE</button>
+  																</td>
+  															</tr>
+  														<?php endforeach ?>
+  													</tbody>
+  												</table>
+  											</div>
+  										</div>
+  									</div>
+  								</div>
   								<div id="tabel_data_lembur" hidden>
   									<!-- Tabel IP -->
   									<h2 class="mt-3">LEMBUR LIST
@@ -327,6 +373,31 @@
   						</div>
   					</div>
 
+					<!-- Modal Tambah Remote -->
+						<div class="modal fade" id="tambahRemoteModal" tabindex="1" role="dialog" aria-labelledby="tambahipModalLabel" aria-hidden="true">
+  						<div class="modal-dialog" role="document">
+  							<div class="modal-content">
+  								<div class="modal-header">
+  									<h3 class="modal-title" id="tambahRemoteModalLabel">Tambah Remote</h3>
+  									<button type="button" class="close" data-dismiss="modal" aria-label="Close">
+  										<span aria-hidden="true">&times;</span>
+  									</button>
+  								</div>
+  								<!-- Form Tambah IP -->
+  								<div class="modal-body">
+  									<!-- <form> -->
+  									<form action="<?= base_url('hamid/createRemote') ?>" method="post">
+  										<div class="form-group" id="formRemoteModal">
+  											<input type="text" class="form-control mt-1 ipaddr" name="remoteaddr" for="ipaddr" id="remoteaddr" placeholder="Remote ADDRESS" value="<?= $data->ipaddr ?>" required>
+  											<input type="text" class="form-control mt-1 name" name="name" for="name" id="name" placeholder="Nama Pengguna" value="<?= $data->name ?>" required>
+  										</div>
+  										<button type="submit" class="btn btn-primary">Tambah Remote</button>
+  									</form>
+  								</div>
+  							</div>
+  						</div>
+  					</div>
+
   					<!-- Modal Edit IP -->
   					<?php foreach ($ip as $row) : ?>
   						<div class="modal fade" id="editModal<?php echo $row->id; ?>" tabindex="-1" role="dialog" aria-labelledby="editModalLabel<?php echo $row->id; ?>" aria-hidden="true">
@@ -378,9 +449,23 @@
   					</script>
 
   					<script>
+						$('#tambah-remote').click(function () {
+							$('#tambahRemoteModalLabel').html('Tambah Remote')
+							$('#formRemoteModal').find('#id').remove()
+							$('#remoteaddr').val("")
+							$('#tambahRemoteModal #name').val("")
+						})
+						$('#dataTable-Rmt').on('click','.btn-edit-remote',function () {
+							$('#remoteaddr').val($(this).attr('data-remote'))
+							$('#tambahRemoteModal #name').val($(this).attr('data-nama'))
+							$('#tambahRemoteModalLabel').html('Edit Remote')
+							$(this).attr('data-remote')
+							$('#formRemoteModal').append(`<input type="text" class="form-control mt-1 ipaddr" name="id" for="ipaddr" id="id" placeholder="Remote ADDRESS" value="${$(this).attr('data-id')}" hidden required>`)
+						})
+
   						function confirmDelete(id) {
-  							if (confirm("Are you sure you want to delete this item?")) {
-  								window.location.href = "<?php echo base_url('hamid/deleteIp/'); ?>" + id;
+  							if (confirm("Apakah Anda Ingin Menghapus Data Ini.?")) {
+  								window.location.href = "<?php echo base_url('hamid/deleteRemote/'); ?>" + id;
   							}
   						}
 
@@ -389,20 +474,34 @@
   								$("#tabel_logdai").prop('hidden', false);
   								$("#tabel_data_lembur").prop('hidden', true);
   								$("#tabel_ip").prop('hidden', true);
+								$("#tabel_remote").prop('hidden', true);
 							}
 						})
+
+						$('#btn-rmtls').click(function() {
+  							if ($("#tabel_remote").is(':hidden')) {
+  								$("#tabel_remote").prop('hidden', false);
+  								$("#tabel_data_lembur").prop('hidden', true);
+  								$("#tabel_logdai").prop('hidden', true);
+								$("#tabel_ip").prop('hidden', true);
+							}
+						})
+
   						$('#btn-ip').click(function() {
   							if ($("#tabel_ip").is(':hidden')) {
   								$("#tabel_ip").prop('hidden', false);
   								$("#tabel_data_lembur").prop('hidden', true);
   								$("#tabel_logdai").prop('hidden', true);
+								$("#tabel_remote").prop('hidden', true);
 							}
 						})
+
 						$('#btn-lembur').click(function() {
 							if ($("#tabel_data_lembur").is(':hidden')) {
 								$("#tabel_data_lembur").prop('hidden', false);
 								$("#tabel_ip").prop('hidden', true);
 								$("#tabel_logdai").prop('hidden', true);
+								$("#tabel_remote").prop('hidden', true);
   							}
   						})
   					</script>

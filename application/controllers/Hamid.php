@@ -7,6 +7,7 @@ class Hamid extends CI_Controller{
         $this->load->helper(['url','form','sia','tgl_indo']);
         $this->load->library(['session','form_validation']);
         $this->load->model('Ip_model','ip',true);
+        $this->load->model('Remote_model','rmt',true);
         $this->load->model('Lembur_model','lembur',true);
         $this->load->model('Logdai_model','logdai',true);
         $login = $this->session->userdata('login');
@@ -19,6 +20,7 @@ class Hamid extends CI_Controller{
         $titleTag = 'Dashboard';
         $content = 'user/itutilities';
         $ip = $this->ip->getIpList();
+        $rmt = $this->rmt->getRemoteList();
         $lembur = $this->lembur->getLemburList();
         $lemburpernama = $this->lembur->getLemburGroupNamaByBulan();
         $datauser = $this->logdai->getUsers();
@@ -38,7 +40,19 @@ class Hamid extends CI_Controller{
 
         $jumlahlogname = count($logname);
         
-        $this->load->view('template',compact('content','titleTag','datauser','data','log','jumlahlogname','logname','ip','lembur','lemburpernama'));
+        $this->load->view('template',compact(
+            'content',
+            'titleTag',
+            'datauser',
+            'data',
+            'log',
+            'jumlahlogname',
+            'logname',
+            'ip',
+            'lembur',
+            'lemburpernama',
+            'rmt'
+        ));
     }
 
     public function printLembur(){
@@ -108,6 +122,44 @@ class Hamid extends CI_Controller{
         redirect('');    
     }
 
+    public function createRemote(){
+        // Jika data sebelumnya ditemukan, gunakan nilai sebelumnya, jika tidak, gunakan nilai default
+        if(!$_POST){
+            $data = (object) $this->rmt->getDefaultValues();
+        }else{
+            if($this->input->post('id',true)){
+                $data = array(
+                    'id'=>$this->input->post('id',true),
+                    'RemoteAddr'=>$this->input->post('remoteaddr',true),
+                    'Nama'=>$this->input->post('name',true)
+                );
+            }else{
+                $data = array(
+                    'RemoteAddr'=>$this->input->post('remoteaddr',true),
+                    'Nama'=>$this->input->post('name',true)
+                );
+            }
+        }
+        if(count($data[id])>0){
+            $id = $data[id];
+            unset($data[id]);
+            $this->rmt->updateDataRemote($id,$data);
+        }else{
+            $this->rmt->insertRemote($data);
+        }
+        $this->session->set_flashdata('berhasil','Data Remote Berhasil Di Tambahkan ');
+        redirect('');    
+    }
+    
+    public function deleteRemote($id) {
+        // Call the model to delete data
+        $this->rmt->deleteRemote($id);
+
+        // Redirect to a page or show a message indicating success
+        $this->session->set_flashdata('berhasil','Data Remote Berhasil Di Hapus');
+        redirect('');    
+    }
+    
     public function updateIp($id) {
         $updated_data = array(
             'ipaddr' => $this->input->post('ipaddr'),
@@ -128,6 +180,7 @@ class Hamid extends CI_Controller{
         $this->session->set_flashdata('berhasil','Data IP Berhasil Di Hapus');
         redirect('');    
     }
+
 
     public function logout(){
         // $this->user->logout();
