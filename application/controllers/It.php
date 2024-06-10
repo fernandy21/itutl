@@ -1,7 +1,7 @@
 <?php
 defined('BASEPATH') OR exit('No direct script access allowed');
 
-class Hamid extends CI_Controller{
+class It extends CI_Controller{
     public function __construct(){
         parent::__construct();
         $this->load->helper(['url','form','sia','tgl_indo']);
@@ -24,7 +24,8 @@ class Hamid extends CI_Controller{
         $lembur = $this->lembur->getLemburList();
         $lemburpernama = $this->lembur->getLemburGroupNamaByBulan();
         $datauser = $this->logdai->getUsers();
-        $log = $this->logdai->getLog();
+        $alllog = $this->logdai->getAllLog();
+        $logweekly = $this->logdai->getLogWeekly();
         $logname = $this->logdai->getLogByName();
         
         foreach ($logname as $row) {
@@ -32,11 +33,10 @@ class Hamid extends CI_Controller{
         }
         
         // echo '<pre>';
-        // var_dump($data);
+        // var_dump($alllog);
         // echo '</pre>';
         // die();
         // print_r($ip);die();
-
 
         $jumlahlogname = count($logname);
         
@@ -45,7 +45,7 @@ class Hamid extends CI_Controller{
             'titleTag',
             'datauser',
             'data',
-            'log',
+            'alllog','logweekly',
             'jumlahlogname',
             'logname',
             'ip',
@@ -56,52 +56,92 @@ class Hamid extends CI_Controller{
     }
 
     public function printLembur(){
-        // $titleTag = 'Dashboard';
-        // $content = 'user/printlembur';
-        // $ip = $this->ip->getIpList();
-        // $lembur = $this->lembur->getLemburId();
-
-        // echo '<pre>';
-        // var_dump($lembur);
-        // echo '</pre>';
-        // die($lembur);
-        // print_r($lembur);die();
-
-// $this->load->view('user/printlembur',compact('content','lemburid'));
         $this->load->view('user/printlembur');
     }
     
     public function createLogdai(){
+        // if(!$_POST){
+        //     $data = (object) $this->logdai->getDefaultValues();
+        // }else{
+        //     $data = array(
+        //         'NIK'=>$this->input->post('NIK',true),
+        //         'tanggal'=>$this->input->post('tanggal',true),
+        //         'judul_act'=>$this->input->post('judul_act',true),
+        //         'deskripsi_act'=>$this->input->post('deskripsi_act',true),
+        //         'catatan'=>$this->input->post('catatan',true)
+        //     );
+        // }
+
+        // // Data baru untuk diinsert
+        // $data = array(
+        //     'id' => $data[NIK] ."_". date('dmYHis'),
+        //     'NIK' => $data[NIK],
+        //     'tanggal' => $data[tanggal],
+        //     'judul_act' => $data[judul_act],
+        //     'deskripsi_act' => $data[deskripsi_act],
+        //     'catatan' => $data[catatan]
+        // );
+        
+        // $this->logdai->insertLog($data);
+        // $this->session->set_flashdata('berhasil','Daily Log Berhasil Di Tambahkan');
+        // redirect('');
+
         // Jika data sebelumnya ditemukan, gunakan nilai sebelumnya, jika tidak, gunakan nilai default
         if(!$_POST){
             $data = (object) $this->logdai->getDefaultValues();
         }else{
-            $data = array(
-                'NIK'=>$this->input->post('NIK',true),
-                'tanggal'=>$this->input->post('tanggal',true),
-                'judul_act'=>$this->input->post('judul_act',true),
-                'deskripsi_act'=>$this->input->post('deskripsi_act',true),
-                'catatan'=>$this->input->post('catatan',true)
-            );
+            if($this->input->post('id',true)){
+                $data = array(
+                    'id'=>$this->input->post('id',true),
+                    'NIK'=>$this->input->post('NIK',true),
+                    'tanggal'=>$this->input->post('tanggal',true),
+                    'judul_act'=>$this->input->post('judul_act',true),
+                    'deskripsi_act'=>$this->input->post('deskripsi_act',true),
+                    'catatan'=>$this->input->post('catatan',true)
+                );
+            }else{
+                $data = array(
+                    'NIK'=>$this->input->post('NIK',true),
+                    'tanggal'=>$this->input->post('tanggal',true),
+                    'judul_act'=>$this->input->post('judul_act',true),
+                    'deskripsi_act'=>$this->input->post('deskripsi_act',true),
+                    'catatan'=>$this->input->post('catatan',true)
+                );
+            }
         }
-
-        // Data baru untuk diinsert
-        $data = array(
-            'id' => $data[NIK] ."_". date('dmYHis'),
-            'NIK' => $data[NIK],
-            'tanggal' => $data[tanggal],
-            'judul_act' => $data[judul_act],
-            'deskripsi_act' => $data[deskripsi_act],
-            'catatan' => $data[catatan]
-        );
-        
-        $this->logdai->insertLog($data);
-        $this->session->set_flashdata('berhasil','Daily Log Berhasil Di Tambahkan');
-        redirect('');    
+        if(count($data[id])>0){
+            $id = $data[id];
+            // echo '<pre>';
+            // var_dump($data);
+            // echo '</pre>';
+            // die();
+            // unset($data[id]);
+            
+            $this->logdai->updateDataLog($id,$data);
+            $this->session->set_flashdata('berhasil','Data Log Berhasil Di Edit ');
+        }else{
+            $data = array(
+                'id' => $data[NIK] ."_". date('dmYHis'),
+                'NIK' => $data[NIK],
+                'tanggal' => $data[tanggal],
+                'judul_act' => $data[judul_act],
+                'deskripsi_act' => $data[deskripsi_act],
+                'catatan' => $data[catatan]
+            );  
+            $this->logdai->insertLog($data);
+            $this->session->set_flashdata('berhasil','Data Log Berhasil Di Tambahkan ');
+        }
+        redirect(''); 
     }
+    
+    public function deleteLog($id, $judul_act) {
+        $this->logdai->deleteLog($id);
+        $this->session->set_flashdata('berhasil', 'Data Log <b>' . urldecode($judul_act) . '</b> Berhasil Di Hapus');
+        redirect('');
+    }
+    
 
     public function createIp(){
-        // Jika data sebelumnya ditemukan, gunakan nilai sebelumnya, jika tidak, gunakan nilai default
         if(!$_POST){
             $data = (object) $this->ip->getDefaultValues();
         }else{
@@ -111,7 +151,6 @@ class Hamid extends CI_Controller{
             );
         }
 
-        // Data baru untuk diinsert
         $data = array(
             'ipaddr' => $data[ipaddr],
             'name' => $data[name]
@@ -152,7 +191,6 @@ class Hamid extends CI_Controller{
     }
     
     public function deleteRemote($id) {
-        // Call the model to delete data
         $this->rmt->deleteRemote($id);
 
         // Redirect to a page or show a message indicating success
@@ -166,28 +204,23 @@ class Hamid extends CI_Controller{
             'name' => $this->input->post('name')
         );
 
-        // Update the data in the database
         $this->ip->updateDataIp($id, $updated_data);
         $this->session->set_flashdata('berhasil','Data IP Berhasil Di Edit');
         redirect('');    
     }
 
     public function deleteIp($id) {
-        // Call the model to delete data
         $this->ip->deleteIp($id);
 
-        // Redirect to a page or show a message indicating success
         $this->session->set_flashdata('berhasil','Data IP Berhasil Di Hapus');
         redirect('');    
     }
-
 
     public function logout(){
         // $this->user->logout();
         // redirect('');
         $this->session->sess_destroy();
 
-        // Redirect to the login page or any other page
         redirect('');
     }
 }

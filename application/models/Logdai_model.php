@@ -18,32 +18,29 @@ class Logdai_model extends CI_Model{
 
     public function getUsers() {
         $this->db->select('*');
-        return $query = $this->db->get('user_it')
-                 ->result();
+        return $query = $this->db->get('user_it')->result();
     }
 
-    public function getLog(){
+    public function getAllLog(){
+        return $query = $this->db->select('*')
+                ->from($this->table)
+                ->join('user_it as b', 'daily_log.NIK = b.NIK')
+                ->order_by('tanggal', 'DESC')
+                ->get()
+                ->result();
+    }
+
+    public function getLogWeekly(){
         return $query = $this->db->select('*')
                 ->from($this->table)
                 ->where("WEEK(daily_log.tanggal) = WEEK(NOW())")
+                // ->where("b.NIK LIKE '%234.030221%'")
                 ->join('user_it as b', 'daily_log.NIK = b.NIK')
                 ->get()
                 ->result();
-                
-        // echo '<pre>';
-        // var_dump($query);
-        // echo '</pre>';
-        // die();
     }
 
     public function getLogByName(){
-        // return $query = $this->db->select('user_it.NIK, user_it.username, user_it.Nama')
-        //         ->from('daily_log')
-        //         ->join('user_it as b', 'b.NIK = daily_log.NIK')
-        //         ->where("WEEK(daily_log.tanggal) = WEEK(NOW())")
-        //         // ->group_by('b.NIK')
-        //         ->get()
-        //         ->result();
 
         return $query = $this->db->select('user_it.NIK, user_it.username, user_it.Nama')
                 ->from($this->table)
@@ -52,16 +49,6 @@ class Logdai_model extends CI_Model{
                 ->group_by('user_it.NIK')
                 ->get()
                 ->result();
-        
-        // return $this->db->select('user_it.NIK, user_it.username, user_it.Nama')
-        //         ->from('daily_log')
-        //         ->join('user_it', 'user_it.NIK = daily_log.NIK')
-        //         ->where("WEEK(daily_log.tanggal) = WEEK(NOW())")
-        //         ->where("user_it.NIK",$nik)
-        //         // ->group_by('user_it.NIK')
-        //         ->get()
-        //         ->result();
-        
         // echo '<pre>';
         // var_dump($query);
         // echo '</pre>';
@@ -69,41 +56,27 @@ class Logdai_model extends CI_Model{
     }
 
     public function getLogByNameData($nik){
-        // return $query = $this->db->select('*')
-        //         ->from($this->table)
-        //         ->where("WEEK(daily_log.tanggal) = WEEK(NOW())")
-        //         ->where("b.NIK",$nik)
-        //         ->join('user_it as b', 'daily_log.NIK = b.NIK')
-        //         ->group_by('b.username')
-        //         ->get()
-        //         ->result();
-
         return $this->db->select('*')
                 ->from('daily_log')
                 ->join('user_it', 'user_it.NIK = daily_log.NIK')
                 ->where("WEEK(daily_log.tanggal) = WEEK(NOW())")
                 ->where("user_it.NIK",$nik)
-                // ->group_by('user_it.NIK')
                 ->get()
                 ->result();
-                    
-        // echo '<pre>';
-        // var_dump($query);
-        // echo '</pre>';
-        // die();
     }
 
     public function insertLog($data){
         return $this->db->insert($this->table,$data);
     }
+    
+    public function updateDataLog($id, $data) {
+        // Update data in the database
+        return $this->db->where('id', $id)->update($this->table, $data);
+    }
 
-    // public function updateDataIp($id, $data) {
-    //     // Update data in the database
-    //     return $this->db->where('id', $id)->update($this->table, $data);
-    // }
+    public function deleteLog($id) {
+        // Delete data from the database
+        $this->db->where('id', $id)->delete($this->table);
+    }
 
-    // public function deleteIp($id) {
-    //     // Delete data from the database
-    //     $this->db->where('id', $id)->delete($this->table);
-    // }
 }

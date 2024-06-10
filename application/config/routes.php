@@ -51,10 +51,10 @@ defined('BASEPATH') OR exit('No direct script access allowed');
 */
 
 // LOGIN
-$route['default_controller'] = 'hamid';
-$route['printlembur'] = 'hamid/printLembur';
+$route['default_controller'] = 'it';
+$route['printlembur'] = 'it/printLembur';
 $route['login'] = 'login/login';
-$route['logout'] = 'hamid/logout';
+$route['logout'] = 'it/logout';
 
 $route['404_override'] = '';
 $route['translate_uri_dashes'] = FALSE;

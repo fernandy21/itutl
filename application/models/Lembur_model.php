@@ -18,10 +18,18 @@ class Lembur_model extends CI_Model{
     }
 
     public function getLemburList(){
-        $this->db->select('*');
-        $this->db->from($this->table.' as a');
-        $this->db->join('user_it as b', 'a.username = b.username');
-        return $query = $this->db->get()->result();            
+        return $query = $this->db->select('*')
+                ->from('lembur_it')
+                ->where('MONTH(lembur_it.tanggal)', date('m'))
+                ->where('YEAR(lembur_it.tanggal)', date('Y'))
+                ->join('user_it as b', 'lembur_it.username = b.username')
+                ->get()
+                ->result();
+
+        // echo '<pre>';
+        // var_dump($query);
+        // echo '</pre>';
+        // die();
     }
 
     public function getLemburId($id) {
@@ -31,19 +39,17 @@ class Lembur_model extends CI_Model{
                     ->where_in('lembur_it.id', $id)
                     ->get();
 
-    // Return the result
-    return $query->result();
-
+        // Return the result
+        return $query->result();
     }
 
     public function getLemburNama($nama) {
        return $query = $this->db->select('*')
                         ->from('lembur_it')
-                        ->join('user_it', 'lembur_it.username = user_it.username')
                         ->where('user_it.Nama', $nama)
+                        ->join('user_it', 'lembur_it.username = user_it.username')
                         ->get()
                         ->result();
-
     }
 
     public function getLemburGroupNamaByBulan() {

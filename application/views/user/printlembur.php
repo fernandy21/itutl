@@ -4,22 +4,21 @@ $id = $_GET['id'];
 if (strpos($id, ',') !== false) {
     $id = explode(',', $id);
 }
-
 // If it's a single ID, convert it to an array
 $id = (array) $id;
-$nama = $_GET['Nama'];
 
-// print_r($id);die();
+$nama_user = $_GET['user'];
+// echo '<pre>';
+// var_dump($nama_user);
+// // var_dump($datanama);
+// echo '</pre>';
+// die();
+
 // Fetch data from the database based on the ID
 // Assuming you have a function to retrieve data based on ID in your model
 $data = $this->lembur->getLemburId($id);
-$datanama = $this->lembur->getLemburNama($nama);
-// print_r($data);die();
-// echo '<pre>';
-// var_dump($id);
-// var_dump($data);
-// echo '</pre>';
-// die();
+$datanama = $this->lembur->getLemburNama($nama_user);
+
 function tanggal_indo($tanggal, $cetak_hari = false)
 {
     $hari = array(
@@ -96,7 +95,7 @@ $tanggal = date('Y-m-d');
 
 <body onload="window.print()">
     <?php
-    if (isset($data)) {
+    if (isset($id)) {
         foreach ($data as $row) :
     ?>
             <div id="printArea" class="print_lembur_<?php echo $row->id; ?>" style="margin:5mm; width: 105mm; height: 148mm; border: 1px solid; background-image: url(<?= base_url('assets/img/bgk-lembur.png') ?>); background-size: cover; background-repeat: no-repeat;">
@@ -133,7 +132,7 @@ $tanggal = date('Y-m-d');
                 </div>
             </div>
         <?php endforeach;
-    } else {
+    } elseif (isset($nama_user)) {
         foreach ($datanama as $row) :
         ?>
             <div id="printArea" class="print_lembur_<?php echo $row->Nama; ?>" style="margin:5mm; width: 105mm; height: 148mm; border: 1px solid; background-image: url(<?= base_url('assets/img/bgk-lembur.png') ?>); background-size: cover; background-repeat: no-repeat;">
