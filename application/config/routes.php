@@ -51,8 +51,9 @@ defined('BASEPATH') OR exit('No direct script access allowed');
 */
 
 // LOGIN
-$route['default_controller'] = 'it';
+$route['default_controller'] = 'landpage';
 $route['printlembur'] = 'it/printLembur';
+// $route['landpage'] = 'landpage';
 $route['login'] = 'login/login';
 $route['logout'] = 'it/logout';
 

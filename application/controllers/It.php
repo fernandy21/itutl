@@ -11,12 +11,13 @@ class It extends CI_Controller{
         $this->load->model('Lembur_model','lembur',true);
         $this->load->model('Logdai_model','logdai',true);
         $this->load->model('Tinta_model','tinta',true);
+        // $this->load->view('user/landpage');
         $login = $this->session->userdata('login');
         if(!$login){
-        redirect('login');
+            redirect('login');
         }
     }
-
+    
     public function index(){
         $titleTag = 'Dashboard';
         $content = 'user/itutilities';
@@ -104,15 +105,14 @@ class It extends CI_Controller{
             $this->logdai->insertLog($data);
             $this->session->set_flashdata('berhasil','Data Log Berhasil Di Tambahkan ');
         }
-        redirect(''); 
+        redirect('it'); 
     }
     
     public function deleteLog($id, $explain) {
         $this->logdai->deleteLog($id);
         $this->session->set_flashdata('berhasil', 'Data Log <b>' . urldecode($explain) . '</b> Berhasil Di Hapus');
-        redirect('');
+        redirect('it');
     }
-    
 
     public function createIp(){
         if(! $_POST) {
@@ -140,7 +140,7 @@ class It extends CI_Controller{
             $this->ip->insertIp($data);
             $this->session->set_flashdata('berhasil', 'Data IP Berhasil Di Tambahkan ');
         }
-        redirect('');
+        redirect('it');
     }
 
     public function createRemote(){
@@ -169,13 +169,13 @@ class It extends CI_Controller{
             $this->rmt->insertRemote($data);
         }
         $this->session->set_flashdata('berhasil','Data Remote Berhasil Di Tambahkan ');
-        redirect('');    
+        redirect('it');    
     }
     
     public function deleteRemote($id, $explain) {
         $this->rmt->deleteRemote($id);
         $this->session->set_flashdata('berhasil', 'Data Remote <b>' . urldecode($explain) . '</b> Berhasil Di Hapus');
-        redirect('');
+        redirect('it');
     }
     
     public function updateIp($id) {
@@ -186,13 +186,13 @@ class It extends CI_Controller{
 
         $this->ip->updateDataIp($id, $updated_data);
         $this->session->set_flashdata('berhasil','Data IP Berhasil Di Edit');
-        redirect('');    
+        redirect('it');    
     }
 
     public function deleteIp($id, $explain) {
         $this->ip->deleteIp($id);
         $this->session->set_flashdata('berhasil', 'Data IP <b>' . urldecode($explain) . '</b> Berhasil Di Hapus');
-        redirect('');
+        redirect('it');
     }
 
     public function createLogTinta(){
@@ -268,19 +268,27 @@ class It extends CI_Controller{
             $this->logdai->insertLog($datalog);
             $this->session->set_flashdata('berhasil','Data Log Tinta Berhasil Di Tambahkan ');
         }
-        redirect(''); 
+        redirect('it'); 
     }
     public function deleteTinta($id, $explain) {
         $this->tinta->deleteTinta($id);
         $this->session->set_flashdata('berhasil', 'Data IP <b>' . urldecode($explain) . '</b> Berhasil Di Hapus');
-        redirect('');
+        redirect('it');
     }
 
     public function logout(){
         // $this->user->logout();
-        // redirect('');
+        // redirect('it');
         $this->session->sess_destroy();
 
-        redirect('');
+        redirect('it');
     }
+    // public function login(){
+    //     $login = $this->session->userdata('login');
+    //     if(!$login){
+    //         redirect('login');
+    //     }else{
+    //         redirect('it');
+    //     }
+    // }
 }

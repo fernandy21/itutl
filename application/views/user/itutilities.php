@@ -59,6 +59,10 @@
 											<span class="btn-inner--icon"><i class="ni ni-button-play"></i></span>
 											<span class="btn-inner--text"> Data Lembur</span>
 										</button>
+										<br><a class="btn btn-icon mb-3 btn-3 btn-success btn-sm" href="<?= base_url('') ?>">
+											<span class="btn-inner--icon"><i class="ni ni-button-play"></i></span>
+											<span>Dashboard</span>
+										</a>
 										<br><a class="btn btn-icon mb-3 btn-3 btn-danger btn-sm" href="<?= base_url('logout') ?>">
 											<span class="btn-inner--icon"><i class="ni ni-button-play"></i></span>
 											<span>Logout</span>
@@ -69,9 +73,9 @@
 							<!-- END TAB KIRI -->
 
 							<!-- START TAB TENGAH -->
-							<div class="col-md-10">
+							<div class="col-md-10" id="adminit">
 								<!-- START DAILY LOG -->
-								<div id="tabel_logdai" hidden>
+								<div id="tabel_logdai">
 									<h2 class="mt-3">Daily Log
 										<button type="button" id="tambahlogdai" class="btn btn-primary btn-sm" data-toggle="modal" data-target="#tambahlogdaiModal">Tambah Log</button>
 									</h2>
@@ -298,7 +302,7 @@
 								<!--END DATA REMOTE -->
 
 								<!-- START LOG TINTA -->
-								<div id="tabel_logtinta">
+								<div id="tabel_logtinta" hidden>
 									<h2 class="mt-3">Log Tinta
 										<button type="button" id="tambahlogtinta" class="btn btn-primary btn-sm" data-toggle="modal" data-target="#tambahlogtintaModal">Tambah Log Tinta</button>
 									</h2>
@@ -353,27 +357,8 @@
 																<td class="truncate" data-content="<?= htmlentities(nl2br($row->deskripsi)); ?>"><?= $row->deskripsi; ?></td>
 																<td class="truncate" data-content="<?= htmlentities(nl2br($row->sisa_stok)); ?>"><?= $row->sisa_stok; ?></td>
 																<td>
-																	<button type="button" class="btn btn-success btn-sm btn-edit-log-tinta" 
-																			data-toggle="modal" 
-																			data-target="#tambahlogtintaModal"
-																			data-idtinta="<?= $row->id; ?>" 
-																			data-tanggal_isi="<?= $row->tanggal_isi; ?>" 
-																			data-tanggal_cek_habis="<?= $row->tanggal_cek_habis; ?>" 
-																			data-unit-pengguna="<?= trim($unit_pengguna); ?>" 
-																			data-tinta-bk="<?= $tinta_bk; ?>" 
-																			data-tinta-c="<?= $tinta_c; ?>" 
-																			data-tinta-m="<?= $tinta_m; ?>" 
-																			data-tinta-y="<?= $tinta_y; ?>" 
-																			data-stok-bk="<?= $stok_bk; ?>" 
-																			data-stok-c="<?= $stok_c; ?>" 
-																			data-stok-m="<?= $stok_m; ?>" 
-																			data-stok-y="<?= $stok_y; ?>" 
-																			data-deskripsi="<?= $row->deskripsi; ?>" 
-																			data-sisa_stok="<?= $row->sisa_stok; ?>">EDIT</button>
-																	<button type="button" class="btn btn-danger btn-sm btn-delete" 
-																			data-id-delete="<?= $row->id; ?>" 
-																			data-tipe="Tinta" 
-																			data-explain="<?= $row->deskripsi; ?>">DELETE</button>
+																	<button type="button" class="btn btn-success btn-sm btn-edit-log-tinta" data-toggle="modal" data-target="#tambahlogtintaModal"data-idtinta="<?= $row->id; ?>" data-tanggal_isi="<?= $row->tanggal_isi; ?>" data-tanggal_cek_habis="<?= $row->tanggal_cek_habis; ?>" data-unit-pengguna="<?= trim($unit_pengguna); ?>" data-tinta-bk="<?= $tinta_bk; ?>" data-tinta-c="<?= $tinta_c; ?>" data-tinta-m="<?= $tinta_m; ?>" data-tinta-y="<?= $tinta_y; ?>" data-stok-bk="<?= $stok_bk; ?>" data-stok-c="<?= $stok_c; ?>" data-stok-m="<?= $stok_m; ?>" data-stok-y="<?= $stok_y; ?>" data-deskripsi="<?= $row->deskripsi; ?>" data-sisa_stok="<?= $row->sisa_stok; ?>">EDIT</button>
+																	<button type="button" class="btn btn-danger btn-sm btn-delete" data-id-delete="<?= $row->id; ?>" data-tipe="Tinta" data-explain="<?= $row->deskripsi; ?>">DELETE</button>
 																</td>
 															</tr>
 														<?php endforeach ?>
@@ -875,7 +860,7 @@
 						})
 					</script>
 
-					<!-- delete & tab script -->
+					<!-- tab script -->
 					<script>
 						$('.btn-delete').click(function() {
 							if (confirm("Are you sure you want to delete this item?")) {
