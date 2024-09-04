@@ -4,7 +4,8 @@ defined('BASEPATH') OR exit('No direct script access allowed');
 class It extends CI_Controller{
     public function __construct(){
         parent::__construct();
-        $this->load->helper(['url','form','sia','tgl_indo']);
+        $this->load->library('curl');
+        $this->load->helper(['url','form']);
         $this->load->library(['session','form_validation']);
         $this->load->model('Ip_model','ip',true);
         $this->load->model('Remote_model','rmt',true);
@@ -18,7 +19,7 @@ class It extends CI_Controller{
         }
     }
     
-    public function index(){
+    public function index() {
         $titleTag = 'Dashboard';
         $content = 'user/itutilities';
         $ip = $this->ip->getIpList();
@@ -30,15 +31,118 @@ class It extends CI_Controller{
         $logweekly = $this->logdai->getLogWeekly();
         $logname = $this->logdai->getLogByName();
         $tinta = $this->tinta->getDataTinta();
+
+        $username = $this->session->userdata('username');
+        $this->session->set_userdata('username', $username);
+        $isAtem = ($username === 'ATEM');
+            
+        // echo '<pre>';
+        // var_dump($isAtem);
+        // echo '</pre>';
+        // die();
+    
+        // Mengambil data ruangan dari API
+        $urlRuangan = DEFINED_URL('getRuangan');
+        $responseRuangan = $this->curl->simple_get($urlRuangan);
+        $ruangan = ($responseRuangan === FALSE) ? [] : json_decode($responseRuangan, true);
+
+        // Mengambil data suhu dan kelembapan untuk setiap ruangan
+        foreach ($ruangan as &$r) {
+            // Get current temperature and humidity
+            $urlTempNow = DEFINED_URL('getTempNow') . '/' . $r['id_ruangan'];
+            $responseTempNow = $this->curl->simple_get($urlTempNow);
+            if ($responseTempNow === FALSE) {
+                $tempNow = [];
+            } else {
+                $tempNow = json_decode($responseTempNow, true);
+                if (json_last_error() !== JSON_ERROR_NONE) {
+                    $tempNow = []; // Handle JSON decoding errors
+                }
+            }
+
+            // Get monitoring schedule
+            $urlJadwalMonit = DEFINED_URL('getJadwalMonitoring') . '/' . $r['id_ruangan'];
+            $responseJadwalMonit = $this->curl->simple_get($urlJadwalMonit);
+            if ($responseJadwalMonit === FALSE) {
+                $JadwalMonit = [];
+            } else {
+                $JadwalMonit = json_decode($responseJadwalMonit, true);
+                if (json_last_error() !== JSON_ERROR_NONE) {
+                    $JadwalMonit = []; // Handle JSON decoding errors
+                }
+            }
+
+            // Initialize an empty array to hold multiple schedules
+            $r['jadwal'] = [];
+            
+            if (!empty($JadwalMonit)) {
+                foreach ($JadwalMonit as $jadwal) {
+                    $r['jadwal'][] = [
+                        'id_jadwal' => $jadwal['id_jadwal'],
+                        'id_item' => $jadwal['id_item'],
+                        'waktu_sampling_jadwal' => $jadwal['waktu_sampling']
+                    ];
+                }
+
+                // Update ruangan with temperature and humidity info
+                $r['actual_temperature'] = $tempNow['actual_temperature'] ?? 'N/A';
+                $r['actual_humidity'] = $tempNow['actual_humidity'] ?? 'N/A';
+                $r['weighted_temperature'] = $tempNow['weighted_temperature'] ?? 'N/A';
+                $r['weighted_humidity'] = $tempNow['weighted_humidity'] ?? 'N/A';
+            } else {
+                // Handle case where no schedules are returned
+                $r['jadwal'][] = [
+                    'id_jadwal' => 'N/A',
+                    'id_item' => 'N/A',
+                    'waktu_sampling_jadwal' => 'N/A'
+                ];
+            }
+        }
+    
+        // Data Detail Ruangan (jika ada input POST)
+        if ($this->input->is_ajax_request() && $this->input->post('data')) {
+            $urlDetail = DEFINED_URL('getHistorySpec');
+            $postData = array('id_item' => $this->input->post('data'));
         
+            // Make POST request
+            $ch = curl_init($urlDetail);
+            curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+            curl_setopt($ch, CURLOPT_POST, true);
+            curl_setopt($ch, CURLOPT_HTTPHEADER, array('Content-Type: application/json'));
+            curl_setopt($ch, CURLOPT_POSTFIELDS, json_encode($postData));
+        
+            $detailResponse = curl_exec($ch);
+            curl_close($ch);
+        
+            // Decode the JSON response
+            $detailData = json_decode($detailResponse, true);
+        
+            // Sort the data by timestamp
+            if (isset($detailData['data']) && is_array($detailData['data'])) {
+                usort($detailData['data'], function($a, $b) {
+                    $dateA = DateTime::createFromFormat('d-m-Y H:i:s', $a['timestamp']);
+                    $dateB = DateTime::createFromFormat('d-m-Y H:i:s', $b['timestamp']);
+                    return $dateB <=> $dateA;
+                });
+            
+                // Batasi data ke 10 item terbaru, lalu urutkan ascending
+                $detailData['data'] = array_slice($detailData['data'], 0, 40);
+                $detailData['data'] = array_reverse($detailData['data']);
+            }
+        
+            // Output JSON response
+            header('Content-Type: application/json');
+            echo json_encode($detailData);
+            exit;
+        }
+    
         foreach ($logname as $row) {
             $data[] = (array) $this->logdai->getLogByNameData($row->NIK);
         }
-        // print_r($ip);die();
-
+    
         $jumlahlogname = count($logname);
-        
-        $this->load->view('template',compact(
+    
+        $this->load->view('template', compact(
             'content',
             'titleTag',
             'datauser',
@@ -51,9 +155,12 @@ class It extends CI_Controller{
             'lembur',
             'lemburpernama',
             'rmt',
-            'tinta'
+            'tinta',
+            'isAtem',
+            'ruangan'
         ));
     }
+    
 
     public function printLembur(){
         $this->load->view('user/printlembur');
@@ -96,12 +203,7 @@ class It extends CI_Controller{
                 'judul_act' => $data[judul_act],
                 'deskripsi_act' => $data[deskripsi_act],
                 'catatan' => $data[catatan]
-            );  
-            // echo "ini penambahan";
-            // echo '<pre>';
-            // var_dump($data);
-            // echo '</pre>';
-            // die();
+            );
             $this->logdai->insertLog($data);
             $this->session->set_flashdata('berhasil','Data Log Berhasil Di Tambahkan ');
         }
@@ -283,6 +385,7 @@ class It extends CI_Controller{
 
         redirect('it');
     }
+
     // public function login(){
     //     $login = $this->session->userdata('login');
     //     if(!$login){

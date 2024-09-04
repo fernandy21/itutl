@@ -17,4 +17,3 @@
   <!-- Argon CSS -->
   <link type="text/css" href="<?= base_url('assets/css/argon.css?v=1.0.0') ?>" rel="stylesheet">
 </head>
-

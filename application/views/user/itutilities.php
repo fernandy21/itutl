@@ -6,6 +6,13 @@
 		max-width: 10rem;
 	}
 
+	canvas {
+		display: block;
+		max-width: 100%;
+		height: auto !important;
+	}
+
+
 	/* .truncate:hover {
         overflow: visible;
     } */
@@ -39,6 +46,7 @@
 										<a href="javascript:;" class="card-title h5 d-block text-darker">
 											Operasional Unit IT
 										</a>
+										<?php if (!$isAtem): ?>
 										<button class="btn btn-icon mb-3 btn-3 btn-primary btn-sm" id="btn-logdai" type="button">
 											<span class="btn-inner--icon"><i class="ni ni-button-play"></i></span>
 											<span class="btn-inner--text"> Daily Log</span>
@@ -59,6 +67,11 @@
 											<span class="btn-inner--icon"><i class="ni ni-button-play"></i></span>
 											<span class="btn-inner--text"> Data Lembur</span>
 										</button>
+										<?php endif; ?>
+										<button class="btn btn-icon mb-3 btn-3 btn-primary btn-sm" id="btn-monit-ruangan" type="button">
+											<span class="btn-inner--icon"><i class="ni ni-button-play"></i></span>
+											<span class="btn-inner--text"> Monit Ruang</span>
+										</button>
 										<br><a class="btn btn-icon mb-3 btn-3 btn-success btn-sm" href="<?= base_url('') ?>">
 											<span class="btn-inner--icon"><i class="ni ni-button-play"></i></span>
 											<span>Dashboard</span>
@@ -74,8 +87,9 @@
 
 							<!-- START TAB TENGAH -->
 							<div class="col-md-10" id="adminit">
+								<?php if (!$isAtem): ?>
 								<!-- START DAILY LOG -->
-								<div id="tabel_logdai">
+								<div id="tabel_logdai" hidden>
 									<h2 class="mt-3">Daily Log
 										<button type="button" id="tambahlogdai" class="btn btn-primary btn-sm" data-toggle="modal" data-target="#tambahlogdaiModal">Tambah Log</button>
 									</h2>
@@ -326,7 +340,8 @@
 														</tr>
 													</thead>
 													<tbody>
-														<?php $k=1; foreach ($tinta as $row) : 
+														<?php $k = 1;
+														foreach ($tinta as $row) :
 															// Extracting values from deskripsi and sisa_stok
 															$deskripsi_parts = explode(" tinta", $row->deskripsi);
 															$unit_pengguna = $deskripsi_parts[0];
@@ -357,7 +372,7 @@
 																<td class="truncate" data-content="<?= htmlentities(nl2br($row->deskripsi)); ?>"><?= $row->deskripsi; ?></td>
 																<td class="truncate" data-content="<?= htmlentities(nl2br($row->sisa_stok)); ?>"><?= $row->sisa_stok; ?></td>
 																<td>
-																	<button type="button" class="btn btn-success btn-sm btn-edit-log-tinta" data-toggle="modal" data-target="#tambahlogtintaModal"data-idtinta="<?= $row->id; ?>" data-tanggal_isi="<?= $row->tanggal_isi; ?>" data-tanggal_cek_habis="<?= $row->tanggal_cek_habis; ?>" data-unit-pengguna="<?= trim($unit_pengguna); ?>" data-tinta-bk="<?= $tinta_bk; ?>" data-tinta-c="<?= $tinta_c; ?>" data-tinta-m="<?= $tinta_m; ?>" data-tinta-y="<?= $tinta_y; ?>" data-stok-bk="<?= $stok_bk; ?>" data-stok-c="<?= $stok_c; ?>" data-stok-m="<?= $stok_m; ?>" data-stok-y="<?= $stok_y; ?>" data-deskripsi="<?= $row->deskripsi; ?>" data-sisa_stok="<?= $row->sisa_stok; ?>">EDIT</button>
+																	<button type="button" class="btn btn-success btn-sm btn-edit-log-tinta" data-toggle="modal" data-target="#tambahlogtintaModal" data-idtinta="<?= $row->id; ?>" data-tanggal_isi="<?= $row->tanggal_isi; ?>" data-tanggal_cek_habis="<?= $row->tanggal_cek_habis; ?>" data-unit-pengguna="<?= trim($unit_pengguna); ?>" data-tinta-bk="<?= $tinta_bk; ?>" data-tinta-c="<?= $tinta_c; ?>" data-tinta-m="<?= $tinta_m; ?>" data-tinta-y="<?= $tinta_y; ?>" data-stok-bk="<?= $stok_bk; ?>" data-stok-c="<?= $stok_c; ?>" data-stok-m="<?= $stok_m; ?>" data-stok-y="<?= $stok_y; ?>" data-deskripsi="<?= $row->deskripsi; ?>" data-sisa_stok="<?= $row->sisa_stok; ?>">EDIT</button>
 																	<button type="button" class="btn btn-danger btn-sm btn-delete" data-id-delete="<?= $row->id; ?>" data-tipe="Tinta" data-explain="<?= $row->deskripsi; ?>">DELETE</button>
 																</td>
 															</tr>
@@ -448,11 +463,68 @@
 									</div>
 								</div>
 								<!-- END DATA LEMBUR -->
+								<?php endif; ?>
+
+
+								<!-- START MONIT -->
+								<div id="monit_ruangan">
+									<h2 class="mt-3">Data Ruangan</h2>
+									<div class="row">
+										<?php if (isset($ruangan) && is_array($ruangan)): ?>
+											<?php foreach ($ruangan as $r): ?>
+												<div class="card" style="width: 22rem; margin: 10px;">
+													<div class="card-body">
+														<h3 class="card-title"><?php echo htmlspecialchars($r['nm_ruangan']); ?></h3>
+														<p id="temp_<?= $r['id_ruangan']; ?>"><strong>Suhu Sekarang:</strong> <span><?php echo htmlspecialchars($r['actual_temperature']); ?></span></p>
+														<p id="humid_<?= $r['id_ruangan']; ?>"><strong>Kelembapan Sekarang:</strong> <span><?php echo htmlspecialchars($r['actual_humidity']); ?></span></p>
+														<p><strong>Weighted Temperature:</strong> <?php echo htmlspecialchars($r['weighted_temperature']); ?></p>
+														<p><strong>Weighted Humidity:</strong> <?php echo htmlspecialchars($r['weighted_humidity']); ?></p>
+														<div class="d-flex justify-content-between">
+															<button type="button" class="btn btn-primary btn-sm" onclick="showDetail(<?php echo $r['id_ruangan']; ?>)" data-namaruangan="<?php echo htmlspecialchars($r['nm_ruangan']); ?>">Detail</button>
+															<button type="button" class="btn btn-success btn-sm" onclick="refreshruangan(<?php echo $r['id_ruangan']; ?>)">Refresh</button>
+															<button type="button" class="btn btn-info btn-sm" onclick="kalibrasi(<?php echo $r['id_ruangan']; ?>)" data-namaruangan="<?php echo htmlspecialchars($r['nm_ruangan']); ?>" data-wt="<?php echo htmlspecialchars($r['wt']); ?>" data-wh="<?php echo htmlspecialchars($r['wh']); ?>">Kalibrasi</button>
+															<button type="button" class="btn btn-info btn-sm" onclick="jadwalsample(<?php echo $r['id_ruangan']; ?>, '<?php echo htmlspecialchars($r['nm_ruangan']); ?>')">Sampling</button><br>
+														</div>
+													</div>
+												</div>
+											<?php endforeach; ?>
+										<?php else: ?>
+											<p>No data available.</p>
+										<?php endif; ?>
+									</div>
+								</div>
+								<div id="detail_ruangan"hidden>
+									<h2 class="mt-3" id="headdetailruangan"></h2>
+									<button class="btn btn-icon mb-3 btn-3 btn-primary btn-sm" id="btn-filterform" type="button">Filter</button>
+									<form id="filterForm" hidden>
+										<div class="form-row">
+											<div class="form-group col-md-4">
+												<label for="startDate">Start Date</label>
+												<input type="date" class="form-control" id="startDate" name="startDate" required>
+											</div>
+											<div class="form-group col-md-4">
+												<label for="endDate">End Date</label>
+												<input type="date" class="form-control" id="endDate" name="endDate" required>
+											</div>
+											<div class="form-group col-md-4 align-self-end">
+												<button type="button" class="btn btn-primary" onclick="refreshShowDetail()">Filter</button>
+											</div>
+										</div>
+									</form>
+
+									<h4>Suhu</h4>
+									<canvas id="temperatureChart" width="400" height="100"></canvas>
+									<h4>Kelembapan</h4>
+									<canvas id="humidityChart" width="400" height="100"></canvas><br>
+									<button type="button" class="btn btn-primary" id="btn-ok-detail">OK</button>
+								</div>
+								<!-- END MONIT -->
 							</div>
 							<!-- END TAB TENGAH -->
 						</div>
 					</div>
 
+					<?php if (!$isAtem): ?>
 					<!-- Modal Tambah LOG -->
 					<div class="modal fade" id="tambahlogdaiModal" tabindex="1" role="dialog" aria-labelledby="tambahlogdaiLabel" aria-hidden="true">
 						<div class="modal-dialog" role="document">
@@ -637,11 +709,90 @@
 							</div>
 						</div>
 					</div>
+					<?php endif; ?>
 
+					<!-- Modal kalibrasi -->
+					<div class="modal fade" id="kalibrasiModal" tabindex="-1" role="dialog" aria-labelledby="kalibrasiModalLabel" aria-hidden="true">
+						<div class="modal-dialog" role="document">
+							<div class="modal-content">
+								<div class="modal-header">
+									<h5 class="modal-title" id="kalibrasiModalLabel">Kalibrasi Ruangan</h5>
+									<button type="button" class="close" data-dismiss="modal" aria-label="Close">
+										<span aria-hidden="true">&times;</span>
+									</button>
+								</div>
+								<div class="modal-body">
+									<form id="kalibrasiForm">
+										<div class="form-group">
+											<label for="kalibrasiSuhu">Kalibrasi Suhu</label>
+											<input type="text" class="form-control" id="kalibrasiSuhu">
+										</div>
+										<div class="form-group">
+											<label for="kalibrasiKelembapan">Kalibrasi Kelembapan</label>
+											<input type="text" class="form-control" id="kalibrasiKelembapan">
+										</div>
+										<input type="hidden" id="idRuangan">
+										<input type="hidden" id="nmRuangan">
+										<button type="button" class="btn btn-primary" onclick="submitKalibrasi()">Submit</button>
+									</form>
+								</div>
+							</div>
+						</div>
+					</div>
+
+					<!-- Modal CU Jadwal Monit -->
+					<div class="modal fade" id="JadwalMonit" tabindex="-1" role="dialog" aria-labelledby="JadwalMonitLabel" aria-hidden="true">
+						<div class="modal-dialog" role="document">
+							<div class="modal-content">
+								<div class="modal-header">
+									<h5 class="modal-title" id="JadwalMonitLabel">Jadwal Monitoring</h5>
+									<button type="button" class="close" data-dismiss="modal" aria-label="Close">
+										<span aria-hidden="true">&times;</span>
+									</button>
+								</div>
+								<div class="modal-body" id="cuJadwalMonit">
+								</div>
+							</div>
+						</div>
+					</div>
+
+					<!-- Modal Jadwal Monit -->
+					<div class="modal fade" id="JadwalSample" tabindex="-1" role="dialog" aria-labelledby="JadwalSampleLabel" aria-hidden="true">
+						<div class="modal-dialog" role="document">
+							<div class="modal-content">
+								<div class="modal-header">
+									<h5 class="modal-title" id="JadwalSampleLabel">Jadwal Monitoring</h5>
+									<button type="button" class="close" data-dismiss="modal" aria-label="Close">
+										<span aria-hidden="true">&times;</span>
+									</button>
+								</div>
+								<div class="modal-body" id="body-modal-jadwal-monit"></div>
+							</div>
+						</div>
+					</div>
+
+					<!-- Modal Konfirmasi -->
+					<div class="modal fade" id="confirmModal" tabindex="-1" aria-labelledby="confirmLabel" aria-hidden="true">
+						<div class="modal-dialog">
+							<div class="modal-content">
+							<div class="modal-header">
+								<h5 class="modal-title" id="confirmLabel">Konfirmasi Penghapusan</h5>
+								<button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+							</div>
+							<div class="modal-body" id="body-modal-konfirmasi">
+							</div>
+							<div class="modal-footer">
+								<button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Batal</button>
+								<button type="button" class="btn btn-danger" id="confirmBtn">IYA BANGET</button>
+							</div>
+							</div>
+						</div>
+					</div>
 
 					<script src="https://code.jquery.com/jquery-3.3.1.slim.min.js"></script>
-					<script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js"></script>
 					<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js"></script>
+					<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+					<script src="https://cdn.jsdelivr.net/npm/chartjs-plugin-annotation@latest/dist/chartjs-plugin-annotation.min.js"></script>
 
 					<!-- search script -->
 					<script>
@@ -880,6 +1031,9 @@
 								$("#tabel_ip").prop('hidden', true);
 								$("#tabel_remote").prop('hidden', true);
 								$("#tabel_logtinta").prop('hidden', true);
+								$("#monit_ruangan").prop('hidden', true);
+								$("#detail_ruangan").prop('hidden', true);
+								$("#filterForm").prop('hidden', true);
 							}
 						})
 						$('#btn-rmtls').click(function() {
@@ -889,6 +1043,9 @@
 								$("#tabel_logdai").prop('hidden', true);
 								$("#tabel_ip").prop('hidden', true);
 								$("#tabel_logtinta").prop('hidden', true);
+								$("#monit_ruangan").prop('hidden', true);
+								$("#detail_ruangan").prop('hidden', true);
+								$("#filterForm").prop('hidden', true);
 							}
 						})
 						$('#btn-ip').click(function() {
@@ -898,6 +1055,9 @@
 								$("#tabel_logdai").prop('hidden', true);
 								$("#tabel_remote").prop('hidden', true);
 								$("#tabel_logtinta").prop('hidden', true);
+								$("#monit_ruangan").prop('hidden', true);
+								$("#detail_ruangan").prop('hidden', true);
+								$("#filterForm").prop('hidden', true);
 							}
 						})
 						$('#btn-lembur').click(function() {
@@ -907,6 +1067,9 @@
 								$("#tabel_logdai").prop('hidden', true);
 								$("#tabel_remote").prop('hidden', true);
 								$("#tabel_logtinta").prop('hidden', true);
+								$("#monit_ruangan").prop('hidden', true);
+								$("#detail_ruangan").prop('hidden', true);
+								$("#filterForm").prop('hidden', true);
 							}
 						})
 						$('#btn-logtinta').click(function() {
@@ -916,6 +1079,39 @@
 								$("#tabel_ip").prop('hidden', true);
 								$("#tabel_logdai").prop('hidden', true);
 								$("#tabel_remote").prop('hidden', true);
+								$("#monit_ruangan").prop('hidden', true);
+								$("#detail_ruangan").prop('hidden', true);
+								$("#filterForm").prop('hidden', true);
+							}
+						})
+						$('#btn-monit-ruangan').click(function() {
+							if ($("#monit_ruangan").is(':hidden')) {
+								$("#monit_ruangan").prop('hidden', false);
+								$("#tabel_data_lembur").prop('hidden', true);
+								$("#tabel_ip").prop('hidden', true);
+								$("#tabel_logdai").prop('hidden', true);
+								$("#tabel_remote").prop('hidden', true);
+								$("#tabel_logtinta").prop('hidden', true);
+								$("#detail_ruangan").prop('hidden', true);
+								$("#filterForm").prop('hidden', true);
+							}
+						})
+						$('#btn-ok-detail').click(function() {
+							if ($("#monit_ruangan").is(':hidden')) {
+								$("#monit_ruangan").prop('hidden', false);
+								$("#detail_ruangan").prop('hidden', true);
+								$("#tabel_data_lembur").prop('hidden', true);
+								$("#tabel_ip").prop('hidden', true);
+								$("#tabel_logdai").prop('hidden', true);
+								$("#tabel_remote").prop('hidden', true);
+								$("#tabel_logtinta").prop('hidden', true);
+								$("#filterForm").prop('hidden', true);
+							}
+						})
+						$('#btn-filterform').click(function() {
+							if ($("#filterForm").is(':hidden')) {
+								$("#filterForm").prop('hidden', false);
+								$("#btn-filterform").prop('hidden', true);
 							}
 						})
 					</script>
@@ -952,4 +1148,547 @@
 							});
 
 						});
+					</script>
+
+					<!-- Script api monit -->
+					<script>
+						let temperatureChartInstance = null;
+						let humidityChartInstance = null;
+
+						function showDetail(idRuangan) {
+							var namaRuangan = event.target.getAttribute('data-namaruangan');
+							document.getElementById('headdetailruangan').textContent = namaRuangan;
+							$.ajax({
+								url: "<?php echo base_url('it'); ?>",
+								type: 'POST',
+								data: {
+									type: 'id',
+									data: idRuangan
+								},
+								dataType: 'json',
+								success: function(response) {
+									if (response.success) {
+										const timestamps = response.data.map(item => item.timestamp);
+										const temperatures = response.data.map(item => item.temp);
+										const humidities = response.data.map(item => item.humid);
+
+										const lastDataPoint = response.data[response.data.length - 1];
+										const lasttemperature = lastDataPoint.temp;
+										const lasthumidity = lastDataPoint.humid;
+										console.log(timestamps, temperatures, humidities);
+
+										if (temperatureChartInstance) {
+											temperatureChartInstance.destroy();
+										}
+										if (humidityChartInstance) {
+											humidityChartInstance.destroy();
+										}
+
+										const isTempOutOfRange = lasttemperature < 18 || lasttemperature > 27;
+										const isHumidityOutOfRange = lasthumidity < 45 || lasthumidity > 50;
+
+										const ctxTemp = document.getElementById('temperatureChart').getContext('2d');
+										temperatureChartInstance = new Chart(ctxTemp, {
+											type: 'line',
+											data: {
+												labels: timestamps,
+												datasets: [{
+													label: 'Temperatur Ruangan',
+													data: temperatures,
+													borderColor: isTempOutOfRange ? 'rgba(255, 99, 132, 1)' : 'rgba(54, 162, 235, 1)',
+													backgroundColor: isTempOutOfRange ? 'rgba(255, 99, 132, 0.2)' : 'rgba(54, 162, 235, 0.2)',
+													borderWidth: 1
+												}]
+											},
+											options: {
+												maintainAspectRatio: true,
+												scales: {
+													x: {
+														title: {
+															display: true,
+															text: 'Timestamp'
+														}
+													},
+													y: {
+														title: {
+															display: true,
+															text: 'Temperature (°C)'
+														},
+														suggestedMin: 0,
+														suggestedMax: 40,
+														grid: {
+															borderColor: isTempOutOfRange ? 'rgba(255, 99, 132, 0.2)' : 'rgba(54, 162, 235, 0.2)',
+														}
+													}
+												}
+											}
+										});
+
+										if (isTempOutOfRange) {
+											const existingTempNotification = document.querySelector('.temp-notification');
+											if (existingTempNotification) {
+												existingTempNotification.remove();
+											}
+
+											const tempNotification = document.createElement('div');
+											tempNotification.className = 'alert alert-danger temp-notification';
+											tempNotification.setAttribute('role', 'alert');
+											tempNotification.innerText = 'Temperature di luar batas aman menurut ISO 27001 (18°C–27°C)';
+											document.getElementById('temperatureChart').insertAdjacentElement('afterend', tempNotification);
+										}
+
+										const ctxHumid = document.getElementById('humidityChart').getContext('2d');
+										humidityChartInstance = new Chart(ctxHumid, {
+											type: 'line',
+											data: {
+												labels: timestamps,
+												datasets: [{
+													label: 'Humidity Ruangan',
+													data: humidities,
+													borderColor: isHumidityOutOfRange ? 'rgba(255, 99, 132, 1)' : 'rgba(75, 192, 192, 1)',
+													backgroundColor: isHumidityOutOfRange ? 'rgba(255, 99, 132, 0.2)' : 'rgba(75, 192, 192, 0.2)',
+													borderWidth: 1
+												}]
+											},
+											options: {
+												maintainAspectRatio: true,
+												scales: {
+													x: {
+														title: {
+															display: true,
+															text: 'Timestamp'
+														}
+													},
+													y: {
+														title: {
+															display: true,
+															text: 'Humidity (%)'
+														},
+														suggestedMin: 0,
+														suggestedMax: 100,
+														grid: {
+															borderColor: isHumidityOutOfRange ? 'rgba(255, 99, 132, 0.2)' : 'rgba(75, 192, 192, 0.2)',
+														}
+													}
+												}
+											}
+										});
+
+										if (isHumidityOutOfRange) {
+											const existingHumidNotification = document.querySelector('.humid-notification');
+											if (existingHumidNotification) {
+												existingHumidNotification.remove();
+											}
+
+											const humidNotification = document.createElement('div');
+											humidNotification.className = 'alert alert-danger humid-notification';
+											humidNotification.setAttribute('role', 'alert');
+											humidNotification.innerText = 'Kelembapan di luar batas aman menurut ISO 27001 (45%–50%)';
+											document.getElementById('humidityChart').insertAdjacentElement('afterend', humidNotification);
+										}
+
+										$("#detail_ruangan").prop('hidden', false);
+										$("#monit_ruangan").prop('hidden', true);
+									} else {
+										alert('Failed to retrieve data.');
+									}
+								},
+								error: function(xhr, status, error) {
+									console.error('AJAX error: ', status, error);
+									alert('An error occurred while retrieving the data.');
+								}
+							});
+						}
+					</script>
+					<script>
+						function refreshShowDetail() {
+							const startDate = document.getElementById('startDate').value;
+							const endDate = document.getElementById('endDate').value;
+
+							if (!startDate || !endDate) {
+								alert('Please select both start and end dates.');
+								return;
+							}
+							if (startDate > endDate) {
+								alert("Start Date tidak boleh lebih besar dari End Date.");
+								return;
+							}
+							$.ajax({
+								url: "<?php echo DEFINED_URL('filterByDate'); ?>",
+								type: 'POST',
+								contentType: 'application/json',
+								data: JSON.stringify({
+									startDate: startDate,
+									endDate: endDate
+								}),
+								dataType: 'json',
+								success: function(response) {
+									if (response) {
+										const timestamps = response.map(item => item.timestamp);
+										const temperatures = response.map(item => item.temp);
+										const humidities = response.map(item => item.humid);
+
+										if (temperatureChartInstance) {
+											temperatureChartInstance.destroy();
+										}
+										const ctxTemp = document.getElementById('temperatureChart').getContext('2d');
+										temperatureChartInstance = new Chart(ctxTemp, {
+											type: 'line',
+											data: {
+												labels: timestamps,
+												datasets: [{
+													label: 'Temperatur Ruangan',
+													data: temperatures,
+													borderColor: 'rgba(54, 162, 235, 1)',
+													backgroundColor: 'rgba(54, 162, 235, 0.2)',
+													borderWidth: 1
+												}]
+											},
+											options: {
+												maintainAspectRatio: true,
+												scales: {
+													x: {
+														title: {
+															display: true,
+															text: 'Timestamp'
+														}
+													},
+													y: {
+														title: {
+															display: true,
+															text: 'Temperature (°C)'
+														},
+														suggestedMin: 0,
+														suggestedMax: 40
+													}
+												}
+											}
+										});
+
+										if (humidityChartInstance) {
+											humidityChartInstance.destroy();
+										}
+										const ctxHumid = document.getElementById('humidityChart').getContext('2d');
+										humidityChartInstance = new Chart(ctxHumid, {
+											type: 'line',
+											data: {
+												labels: timestamps,
+												datasets: [{
+													label: 'Humidity Ruangan',
+													data: humidities,
+													borderColor: 'rgba(75, 192, 192, 1)',
+													backgroundColor: 'rgba(75, 192, 192, 0.2)',
+													borderWidth: 1
+												}]
+											},
+											options: {
+												maintainAspectRatio: true,
+												scales: {
+													x: {
+														title: {
+															display: true,
+															text: 'Timestamp'
+														}
+													},
+													y: {
+														title: {
+															display: true,
+															text: 'Humidity (%)'
+														},
+														suggestedMin: 0,
+														suggestedMax: 100
+													}
+												}
+											}
+										});
+
+									} else {
+										alert('Failed to retrieve filtered data.');
+									}
+								},
+								error: function(xhr, status, error) {
+									console.error('AJAX error: ', status, error);
+									alert('An error occurred while retrieving the filtered data.');
+								}
+							});
+						}
+					</script>
+
+					<!-- kalibrasi dan monit -->
+					<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+					<script>
+						function refreshruangan(id_ruangan) {
+							console.log('ini adalah id ruangan : ', id_ruangan);
+
+							$.ajax({
+								url: '<?= DEFINED_URL('getTempNow') ?>/'+ id_ruangan,
+								method: 'GET',
+								success: function(response) {
+									$('#temp_' + id_ruangan + ' span').text(response.actual_temperature);
+									$('#humid_' + id_ruangan + ' span').text(response.actual_humidity);
+									alert('Data sudah di-refresh');
+								},
+								error: function(xhr, status, error) {
+									console.error('Failed to refresh data:', error);
+									alert('Failed to refresh data.');
+								}
+							});
+						}
+
+						function kalibrasi(id_ruangan) {
+							var button = $(event.target);
+							var nm_ruangan = button.data('namaruangan');
+							var wt = button.data('wt');
+							var wh = button.data('wh');
+
+							$('#idRuangan').val(id_ruangan);
+							$('#nmRuangan').val(nm_ruangan);
+							$('#kalibrasiSuhu').val(wt);
+							$('#kalibrasiKelembapan').val(wh);
+							$('#kalibrasiModal').modal('show');
+						}
+
+						function submitKalibrasi() {
+							var id_ruangan = $('#idRuangan').val();
+							var nm_ruangan = $('#nmRuangan').val();
+							var wt = $('#kalibrasiSuhu').val();
+							var wh = $('#kalibrasiKelembapan').val();
+
+							$.ajax({
+								url: '<?= DEFINED_URL('update-monit-ruangan') ?>',
+								method: 'POST',
+								contentType: 'application/json',
+								data: JSON.stringify({
+									id_ruangan: id_ruangan,
+									data: {
+										nm_ruangan: nm_ruangan,
+										wt: wt,
+										wh: wh
+									}
+								}),
+								success: function(response) {
+									$('#temp_' + id_ruangan).text(response.actual_temperature);
+									$('#humid_' + id_ruangan).text(response.actual_humidity);
+									$('#kalibrasiModal').modal('hide');
+									alert('Data sudah update / data terupdate');
+								},
+								error: function(xhr, status, error) {
+									console.error('Kalibrasi failed:', error);
+								}
+							});
+						}
+					</script>
+
+					<!-- sampling monit -->
+					<script>
+						function jadwalsample(id_ruangan, nm_ruangan) {
+							$.ajax({
+								url: '<?= DEFINED_URL('getJadwalMonitoring') ?>/' + id_ruangan,
+								method: 'GET',
+								success: function(response) {
+									$('#body-modal-jadwal-monit').empty();
+									if (Array.isArray(response)) {
+										response.forEach(function(jadwal) {
+											var container = $('<div></div>').css({'display': 'inline-block','margin-bottom': '10px','width': '100%'});
+											var jadwalElement = $('<p></p>').attr('id', 'jadwal-sampling-' + jadwal.id_jadwal).css({'display': 'inline-block','margin-right': '10px'}).html('<strong>' + jadwal.waktu_sampling + '</strong>');
+											var deleteButton = $('<button></button>').attr('type', 'button').attr('id', 'dJadwalMonit-' + id_ruangan).addClass('btn btn-danger btn-sm').css({'display': 'inline-block','margin-right': '10px'}).text('Hapus Jadwal').data({'id-jadwal': jadwal.id_jadwal,'id-ruangan': id_ruangan,'waktu-jadwal': jadwal.waktu_sampling}).on('click', function() {dJadwalSampling(jadwal.id_jadwal, id_ruangan);});
+											var editButton = $('<button></button>').attr('type', 'button').attr('id', 'uJadwalMonit-' + id_ruangan).addClass('btn btn-success btn-sm').css({'display': 'inline-block'}).text('Edit Jadwal').data({'id-jadwal': jadwal.id_jadwal,'id-ruangan': id_ruangan,'waktu-jadwal': jadwal.waktu_sampling}).on('click', function() {uJadwalSampling(jadwal.id_jadwal, id_ruangan, jadwal.waktu_sampling);});
+
+											container.append(jadwalElement);
+											container.append(deleteButton);
+											container.append(editButton);
+
+											$('#body-modal-jadwal-monit').append(container);
+										});
+
+										var createButton = $('<button></button>').attr('type', 'button').attr('id', 'cJadwalMonit-' + id_ruangan).addClass('btn btn-info btn-sm').css({'display': 'block','margin-top': '10px'}).text('Buat Jadwal').on('click', function() {cJadwalSampling(id_ruangan, nm_ruangan);});
+										$('#body-modal-jadwal-monit').append(createButton);
+									} else {
+										$('#body-modal-jadwal-monit').append('<p>No schedule available for this room.</p>');
+									}
+									$('#JadwalSample').modal('show');
+								},
+								error: function(xhr, status, error) {
+									console.error('Failed to refresh data:', error);
+									alert('Failed to refresh data.');
+								}
+							});
+						}
+						
+						function dJadwalSampling(id_jadwal, id_ruangan) {
+							$('#JadwalSample').modal('hide');
+							$('#body-modal-konfirmasi').empty();
+							$('#body-modal-konfirmasi').append('<h1">Beneran dihapus jadwalnya?</h1>');
+							setTimeout(function() {
+								$('#confirmModal').modal('show');
+							}, 500);
+							$('#confirmBtn').off('click').on('click', function() {
+								$.ajax({
+									url: '<?= DEFINED_URL('deleteJadwal') ?>',
+									method: 'POST',
+									contentType: 'application/json',
+									data: JSON.stringify({
+										id_jadwal: id_jadwal
+									}),
+									success: function(response) {
+										console.log('ini adalah id jadwal : ' + id_jadwal);
+										console.log('ini adalah id ruangan : ' + id_ruangan);
+
+										alert('Data sudah terhapus');
+										refreshJadwalSampling(id_ruangan);
+										$('#confirmModal').modal('hide');
+										setTimeout(function() {
+											$('#JadwalSample').modal('show');
+										}, 500);
+									},
+									error: function(xhr, status, error) {
+										console.error('Update failed:', error);
+										alert('Penghapusan gagal. Silakan coba lagi.');
+									}
+								});
+							});
+						}
+
+						function uJadwalSampling(id_jadwal, id_ruangan, waktu_jadwal) {
+							$('#cuJadwalMonit').empty();
+							var monit = $('#cuJadwalMonit').append(`<form id="JadwalMonit">
+										<div class="form-group">
+											<input type="text" class="form-control" id="WaktuJadwalMonit" value="` + waktu_jadwal + `">
+										</div>
+										<input type="hidden" class="form-control" id="id_JadwalMonit" value="` + id_jadwal + `">
+										<input type="hidden" class="form-control" id="id_ruangan" value="` + id_ruangan + `">
+										<button type="button" class="btn btn-primary" onclick="UsubmitUJadwal()">Submit</button>
+									</form>`)
+
+							console.log('ini id_jadwal : ' + id_jadwal);
+							console.log('ini id_ruangan : ' + id_ruangan);
+							console.log('ini jadwal : ' + waktu_jadwal);
+
+							$('#JadwalSample').modal('hide');
+							setTimeout(function() {
+								$('#JadwalMonit').modal('show');
+							}, 500);
+						}
+
+						function UsubmitUJadwal() {
+							var id_jadwal = $('#id_JadwalMonit').val();
+							var waktu_jadwal = $('#WaktuJadwalMonit').val();
+							var id_ruangan = $('#id_ruangan').val();
+							console.log('ini id_jadwal : ' + id_jadwal);
+							console.log('ini id_ruangan : ' + id_ruangan);
+							console.log('ini jadwal : ' + waktu_jadwal);
+
+
+							$('#body-modal-konfirmasi').empty();
+							$('#body-modal-konfirmasi').append('<h1">Beneran di-Update jadwalnya?</h1>');
+							setTimeout(function() {
+								$('#confirmModal').modal('show');
+							}, 500);
+							$('#confirmBtn').off('click').on('click', function() {
+								$.ajax({
+									url: '<?= DEFINED_URL('updateJadwal') ?>',
+									method: 'POST',
+									contentType: 'application/json',
+									data: JSON.stringify({
+										id_jadwal: id_jadwal,
+										waktu : waktu_jadwal
+									}),
+									success: function(response) {
+										alert('Data sudah update / data terupdate');
+										refreshJadwalSampling(id_ruangan);
+										$('#confirmModal').modal('hide');
+										$('#JadwalMonit').modal('hide');
+										setTimeout(function() {
+											$('#JadwalSample').modal('show');
+										}, 500);
+									},
+									error: function(xhr, status, error) {
+										console.error('Update failed:', error);
+									}
+								});
+							});
+						}
+
+						function cJadwalSampling(id_ruangan, nm_ruangan) {
+							$('#cuJadwalMonit').empty();
+							var monit = $('#cuJadwalMonit').append(`<form id="JadwalMonit">
+										<input type="hidden" class="form-control" id="id_ruangan" value="` + id_ruangan + `">
+										<input type="text" class="form-control" id="nm_ruangan" value="` + nm_ruangan + `" disabled>
+										<input type="time" class="form-control" id="WaktuJadwalMonit" step="1">
+										<button type="button" class="btn btn-primary" onclick="CsubmitUJadwal()">Submit</button>
+									</form>`)
+
+							$('#JadwalSample').modal('hide');
+							setTimeout(function() {
+								$('#JadwalMonit').modal('show');
+							}, 500);
+						}
+
+						function CsubmitUJadwal() {
+							var waktu_jadwal = $('#WaktuJadwalMonit').val();
+							var id_ruangan = $('#id_ruangan').val();
+
+
+							$('#body-modal-konfirmasi').empty();
+							$('#body-modal-konfirmasi').append('<h1">Jadwalnya sudah benar?</h1>');
+							setTimeout(function() {
+								$('#confirmModal').modal('show');
+							}, 500);
+							$('#confirmBtn').off('click').on('click', function() {
+								$.ajax({
+									url: '<?= DEFINED_URL('addJadwal') ?>',
+									method: 'POST',
+									contentType: 'application/json',
+									data: JSON.stringify({
+										id_item: id_ruangan,
+										waktu : waktu_jadwal
+									}),
+									success: function(response) {
+										alert('Data sudah ditambahkan');
+										refreshJadwalSampling(id_ruangan);
+										$('#confirmModal').modal('hide');
+										$('#JadwalMonit').modal('hide');
+										setTimeout(function() {
+											$('#JadwalSample').modal('show');
+										}, 500);
+									},
+									error: function(xhr, status, error) {
+										console.error('Update failed:', error);
+									}
+								});
+							});
+						}
+
+						function refreshJadwalSampling(id_ruangan) {
+							$.ajax({
+								url: '<?= DEFINED_URL('getJadwalMonitoring') ?>/' + id_ruangan,
+								method: 'GET',
+								success: function(response) {
+									$('#body-modal-jadwal-monit').empty();
+									if (Array.isArray(response)) {
+										response.forEach(function(jadwal) {
+											var container = $('<div></div>').css({'display': 'inline-block','margin-bottom': '10px','width': '100%'});
+											var jadwalElement = $('<p></p>').attr('id', 'jadwal-sampling-' + jadwal.id_jadwal).css({'display': 'inline-block','margin-right': '10px'}).html('<strong>' + jadwal.waktu_sampling + '</strong>');
+											var deleteButton = $('<button></button>').attr('type', 'button').attr('id', 'dJadwalMonit-' + id_ruangan).addClass('btn btn-danger btn-sm').css({'display': 'inline-block','margin-right': '10px'}).text('Hapus Jadwal').data({'id-jadwal': jadwal.id_jadwal,'id-ruangan': id_ruangan,'waktu-jadwal': jadwal.waktu_sampling}).on('click', function() {dJadwalSampling(jadwal.id_jadwal, id_ruangan);});
+											var editButton = $('<button></button>').attr('type', 'button').attr('id', 'uJadwalMonit-' + id_ruangan).addClass('btn btn-success btn-sm').css({'display': 'inline-block'}).text('Edit Jadwal').data({'id-jadwal': jadwal.id_jadwal,'id-ruangan': id_ruangan,'waktu-jadwal': jadwal.waktu_sampling}).on('click', function() {uJadwalSampling(jadwal.id_jadwal, id_ruangan);});
+
+											container.append(jadwalElement);
+											container.append(deleteButton);
+											container.append(editButton);
+
+											$('#body-modal-jadwal-monit').append(container);
+										});
+
+										var createButton = $('<button></button>').attr('type', 'button').attr('id', 'cJadwalMonit-' + id_ruangan).addClass('btn btn-info btn-sm').css({'display': 'block','margin-top': '10px'}).text('Buat Jadwal').on('click', function() {cJadwalSampling(id_ruangan);});
+										$('#body-modal-jadwal-monit').append(createButton);
+									} else {
+										$('#body-modal-jadwal-monit').append('<p>No schedule available for this room.</p>');
+									}
+								},
+								error: function(xhr, status, error) {
+									console.error('Failed to refresh jadwal sampling:', error);
+									alert('Terjadi kesalahan saat merefresh data jadwal sampling.');
+								}
+							});
+						}
 					</script>

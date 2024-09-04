@@ -68,6 +68,40 @@ if ( ! function_exists('site_url'))
 }
 
 // ------------------------------------------------------------------------
+// if ( ! function_exists('DEFINED_URL'))
+// {
+// 	function DEFINED_URL($key = '', $protocol = NULL)
+// 	{
+// 		$CI =& get_instance();
+// 		$urls = $CI->config->item('DEFINED_URL');
+// 		return isset($urls[$key]) ? $urls[$key] : null;
+// 	}
+// }
+
+if (!function_exists('DEFINED_URL')) {
+    function DEFINED_URL($endpoint) {
+        // Define the base URL and port
+        $API = 'http://192.168.1.108:8028/';
+
+        // Map your endpoint keys to actual API paths
+        $endpoints = [
+            'getRuangan' => 'getRuangan',
+            'getHistorySpec' => 'getHistorySpec',
+            'getTempNow' => 'getTempNow',
+            'update-monit-ruangan' => 'update-monit-ruangan',
+            'filterByDate' => 'filterByDate',
+            'getJadwalMonitoring' => 'getJadwalMonitoring',
+            'updateJadwal' => 'updateJadwal',
+            'addJadwal' => 'addJadwal',
+            'deleteJadwal' => 'deleteJadwal',
+        ];
+
+        // Return the full URL
+        return isset($endpoints[$endpoint]) ? $API . $endpoints[$endpoint] : $API;
+    }
+}
+
+
 
 if ( ! function_exists('base_url'))
 {
